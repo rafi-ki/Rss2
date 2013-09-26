@@ -117,5 +117,5 @@ public class RssReader
     	      result = event.asCharacters().getData();
     	    }
     	    return result;
-    	  }
+    }
 }
