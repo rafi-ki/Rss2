@@ -1,8 +1,12 @@
 package com.example.rss;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.os.Bundle;
 import android.view.Menu;
+
+import com.example.rss.fragments.FeedListFragment;
 
 public class MainActivity extends Activity {
 
@@ -10,6 +14,13 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		//Testing fragments
+		FragmentManager fragmentManager = getFragmentManager();
+		FeedListFragment listFragment = new FeedListFragment();
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		transaction.add(R.id.feed_list_fragment_container, listFragment);
+		transaction.commit();
 	}
 
 	@Override
