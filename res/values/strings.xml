@@ -6,5 +6,6 @@
     <string name="hello_domi">Hello Dominik!</string>
     <string name="hello_world">Hello World!</string>
     <string name="action_subscribe">subscribe to feed</string>
+    <string name="subscribe_ok_button">subscribe</string>
 
 </resources>
