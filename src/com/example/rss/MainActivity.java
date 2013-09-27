@@ -5,9 +5,11 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.example.rss.fragments.DetailList;
 import com.example.rss.fragments.FeedListFragment;
+import com.example.rss.fragments.SubscriberFragment;
 
 public class MainActivity extends Activity {
 
@@ -28,5 +30,25 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+	    // Handle item selection
+		switch (item.getItemId()) {
+        case R.id.action_subscribe:
+        	FragmentManager fragmentManager = getFragmentManager();
+        	FragmentTransaction transaction = fragmentManager.beginTransaction();
+        	transaction.addToBackStack(null);
+        	transaction.replace(R.id.main_activity, new SubscriberFragment());
+        	transaction.commit();
+            return true;
+        
+        default:
+            return super.onOptionsItemSelected(item);
+		}
+
+	}
+
 
 }

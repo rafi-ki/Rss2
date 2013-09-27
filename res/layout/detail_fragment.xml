@@ -6,6 +6,6 @@
     <TextView 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="subscribe function will be here"/>
+        android:text="detail page will be here"/>
 
 </RelativeLayout>
