@@ -1,14 +1,15 @@
 
 <FrameLayout 
     xmlns:android = "http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     
-    <fragment android:name="com.example.rss.fragments.FeedListFragment"
+    <!-- <fragment android:name="com.example.rss.fragments.FeedListFragment"
         android:id="@+id/feedlist_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-     	/>
+     	/> -->
     
     <!-- <fragment android:name="com.example.rss.fragments.SubscriberFragment"
         android:id="@+id/subscribe_fragment"

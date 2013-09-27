@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 
+import com.example.rss.fragments.DetailList;
 import com.example.rss.fragments.FeedListFragment;
 
 public class MainActivity extends Activity {
@@ -14,6 +15,11 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		FragmentManager fragmentManager = getFragmentManager();
+		 FragmentTransaction transaction = fragmentManager.beginTransaction();
+		 transaction.add(R.id.main_activity, new FeedListFragment());
+		 transaction.commit();
 	}
 
 	@Override

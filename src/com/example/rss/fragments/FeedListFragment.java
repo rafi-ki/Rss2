@@ -1,17 +1,15 @@
 package com.example.rss.fragments;
 
 
-import java.net.URL;
+import com.example.rss.R;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.XmlReader;
 
 public class FeedListFragment extends ListFragment {
 	
@@ -67,5 +65,12 @@ public class FeedListFragment extends ListFragment {
 	 public void onListItemClick(ListView lv, View v, int position, long id)
 	 {
 		 System.out.println("item clicked: " + position + ", " + id);
+		 
+		 FragmentManager fragmentManager = getFragmentManager();
+		 FragmentTransaction transaction = fragmentManager.beginTransaction();
+		 transaction.replace(R.id.main_activity, new DetailList());
+		 transaction.addToBackStack(null);
+		 transaction.commit();
+		 
 	 }
 }
