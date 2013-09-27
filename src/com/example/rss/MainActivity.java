@@ -14,13 +14,6 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		//Testing fragments
-//		FragmentManager fragmentManager = getFragmentManager();
-//		FeedListFragment listFragment = new FeedListFragment();
-//		FragmentTransaction transaction = fragmentManager.beginTransaction();
-//		transaction.add(R.id.feed_list_fragment_container, listFragment);
-//		transaction.commit();
 	}
 
 	@Override

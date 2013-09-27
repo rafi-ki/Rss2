@@ -1,6 +1,25 @@
 
-<RelativeLayout 
+<FrameLayout 
     xmlns:android = "http://schemas.android.com/apk/res/android"
-    android:id="@+id/navigation_drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent" >
+    
+    <fragment android:name="com.example.rss.fragments.FeedListFragment"
+        android:id="@+id/feedlist_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+     	/>
+    
+    <!-- <fragment android:name="com.example.rss.fragments.SubscriberFragment"
+        android:id="@+id/subscribe_fragment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+      	/>
+    
+    <fragment android:name="com.example.rss.fragments.DetailList"
+        android:id="@+id/details_fragment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+    	/> -->
+    
+</FrameLayout>
