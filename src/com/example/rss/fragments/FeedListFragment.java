@@ -47,9 +47,9 @@ public class FeedListFragment extends ListFragment {
 //         }
 		 
 		 
-		 adapter.add("click to go to details");
-		 adapter.add("fancy listitem");
-		 adapter.add("cant add real feed-item :(");
+		 adapter.add("dummy feed 1");
+		 adapter.add("dummy feed 2");
+		 adapter.add("dummy feed 3");
 		 setListAdapter(adapter);
 		 
 	 }
@@ -68,8 +68,8 @@ public class FeedListFragment extends ListFragment {
 		 
 		 FragmentManager fragmentManager = getFragmentManager();
 		 FragmentTransaction transaction = fragmentManager.beginTransaction();
-		 transaction.replace(R.id.main_activity, new DetailList());
 		 transaction.addToBackStack(null);
+		 transaction.replace(R.id.main_activity, new DetailList());
 		 transaction.commit();
 		 
 	 }
