@@ -1,13 +1,11 @@
 package com.example.rss.fragments;
 
+
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import com.example.rss.model.RssFeed;
-import com.example.rss.parser.RssReader;
 
 public class FeedListFragment extends ListFragment {
 	
@@ -35,7 +33,12 @@ public class FeedListFragment extends ListFragment {
 //		 System.out.println("read rss feed");
 //		 adapter.add(feed.getTitle());
 //		 adapter.add(feed.getLanguage());
+//		 FeedItem item = new FeedItem();
+		 
+		 
 		 adapter.add("click to go to details");
+		 adapter.add("fancy listitem");
+		 adapter.add("cant add real feed-item :(");
 		 setListAdapter(adapter);
 		 
 		 //TODO set 
