@@ -53,6 +53,7 @@ public class MainActivity extends Activity {
 
 	}
 
+	//Button method to subscribe to the feed with the url from the edittextview of the same fragment
 	public void subscribeButtonClick(View v) {
         System.out.println("button was clicked");
         
