@@ -34,5 +34,17 @@ public class FeedManager {
 	public LinkedList <Feed> getFeedlist() {
 		return feedlist;
 	}
+	
+	public boolean storeSubscribedFeeds()
+	{
+		//TODO implement function, think about how to save  them
+		return false;
+	}
+	
+	public boolean restoreSubscribedFeeds()
+	{
+		//TODO implement function, vice-versa to storeSubscibedFeeds()
+		return false;
+	}
 
 }
