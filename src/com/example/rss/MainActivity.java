@@ -16,10 +16,14 @@ import com.example.rss.fragments.SubscriberFragment;
 
 public class MainActivity extends Activity {
 
+	private FeedManager feedmanager;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		feedmanager= FeedManager.getInstance(); //gets instance of the feedmanager (singelton)
 		
 		FragmentManager fragmentManager = getFragmentManager();
 		 FragmentTransaction transaction = fragmentManager.beginTransaction();
