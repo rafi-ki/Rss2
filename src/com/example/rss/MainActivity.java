@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.rss.fragments.DetailList;
 import com.example.rss.fragments.FeedListFragment;
@@ -54,6 +55,9 @@ public class MainActivity extends Activity {
 
 	public void subscribeButtonClick(View v) {
         System.out.println("button was clicked");
+        
+        EditText urlinput = (EditText) findViewById(R.id.subscribe_url_input);
+        System.out.println("Url: "+urlinput.getEditableText());
     }
 	
 }
