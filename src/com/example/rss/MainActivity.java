@@ -6,6 +6,8 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.rss.fragments.DetailList;
 import com.example.rss.fragments.FeedListFragment;
@@ -50,5 +52,8 @@ public class MainActivity extends Activity {
 
 	}
 
-
+	public void subscribeButtonClick(View v) {
+        System.out.println("button was clicked");
+    }
+	
 }

@@ -15,6 +15,8 @@ public class SubscriberFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.subscribe_to_feed_fragment, container, false);
+       
+
     }
-	
+
 }
