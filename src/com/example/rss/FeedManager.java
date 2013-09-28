@@ -22,8 +22,8 @@ public class FeedManager {
 	}
 	
 	public boolean addFeed(Feed feedtoadd){
-		//TODO implement function
-		return false;
+		feedlist.add(feedtoadd);
+		return true;
 	}
 	
 	public boolean delFeed(){

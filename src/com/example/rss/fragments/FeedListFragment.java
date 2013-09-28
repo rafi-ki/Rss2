@@ -1,7 +1,9 @@
 package com.example.rss.fragments;
 
 
+import com.example.rss.FeedManager;
 import com.example.rss.R;
+import com.example.rss.Feed;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -15,12 +17,15 @@ public class FeedListFragment extends ListFragment {
 	
 	private final static String STATE_KEY = "curPos";
 	private int lastPosition;
+	private FeedManager feedmanager;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		 System.out.println("FeedList-Fragment created");
+		 
+		 feedmanager= FeedManager.getInstance();
 	}
 		
 	 @Override
@@ -47,9 +52,11 @@ public class FeedListFragment extends ListFragment {
 //         }
 		 
 		 
-		 adapter.add("dummy feed 1");
-		 adapter.add("dummy feed 2");
-		 adapter.add("dummy feed 3");
+		 for(Feed f: feedmanager.getFeedlist()){
+			 adapter.add(f.getFeedurl());
+		 }
+		 
+		 
 		 setListAdapter(adapter);
 		 
 	 }

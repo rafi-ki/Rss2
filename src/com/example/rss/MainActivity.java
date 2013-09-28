@@ -63,6 +63,17 @@ public class MainActivity extends Activity {
         
         EditText urlinput = (EditText) findViewById(R.id.subscribe_url_input);
         System.out.println("Url: "+urlinput.getEditableText());
+        
+        String feedurlstring = urlinput.getEditableText().toString();
+        if(feedurlstring!=""){
+        	feedmanager.addFeed(new Feed(feedurlstring));
+        }
+        
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.popBackStack();
+      // FragmentTransaction transaction = fragmentManager.beginTransaction();
+        //transaction.replace(R.id.main_activity, new FeedListFragment());
+       // transaction.commit();
     }
 	
 }
