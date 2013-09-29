@@ -1,11 +1,8 @@
 package com.example.rss.parser;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.example.rss.model.FeedItem;
 import com.example.rss.model.RssFeed;
 
 public class RssReader
@@ -22,18 +19,18 @@ public class RssReader
     private static final String FEED_ID = "guid";
     
 
-//    public RssFeed readFeed(String strURL)
-//    {
-//        if (strURL == null) //can not be parsed
-//            return null;
-//
-//        try {
-//			this.url = new URL(strURL);
-//		} catch (MalformedURLException mue) {
-//			mue.printStackTrace();
-//		}
-//        RssFeed feed = null;
-//        
+    public RssFeed readFeed(String strURL)
+    {
+        if (strURL == null) //can not be parsed
+            return null;
+
+        try {
+			this.url = new URL(strURL);
+		} catch (MalformedURLException mue) {
+			mue.printStackTrace();
+		}
+        RssFeed feed = null;
+        
 //        boolean isFeedHeader = true;
 //        String author = "";
 //        String title = "";
@@ -99,10 +96,10 @@ public class RssReader
 //        } catch (IOException e) {
 //			throw new RuntimeException(e);
 //		}
-//
-//        return feed;
-//    }
-//    
+
+        return feed;
+    }
+    
 //    private String getStringFromReader(XMLEvent event, XMLEventReader eventReader)
 //    	      throws XMLStreamException {
 //    	    String result = "";

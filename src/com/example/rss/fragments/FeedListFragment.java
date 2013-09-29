@@ -1,23 +1,32 @@
 package com.example.rss.fragments;
 
 
-import com.example.rss.FeedManager;
-import com.example.rss.R;
-import com.example.rss.Feed;
-
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ListFragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.rss.Feed;
+import com.example.rss.FeedLoaderService;
+import com.example.rss.FeedManager;
+import com.example.rss.R;
+
 public class FeedListFragment extends ListFragment {
 	
 	private final static String STATE_KEY = "curPos";
+	private final static String FEED_COMMUNICATOR = "receive feeds";
+	private final static String FEED_MESSAGE = "feed";
 	private int lastPosition;
 	private FeedManager feedmanager;
+	private BroadcastReceiver feedReceiver;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -26,6 +35,10 @@ public class FeedListFragment extends ListFragment {
 		 System.out.println("FeedList-Fragment created");
 		 
 		 feedmanager= FeedManager.getInstance();
+		 feedReceiver = new FeedReceiver();
+		 
+		 IntentFilter filter = new IntentFilter(FEED_COMMUNICATOR);
+		 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(feedReceiver, filter);
 	}
 		
 	 @Override
@@ -37,29 +50,23 @@ public class FeedListFragment extends ListFragment {
 			 lastPosition = savedInstanceState.getInt(STATE_KEY, 0);
 		 
 		 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_activated_1);
-		 //TODO use underlying code on other thread than ui-thread
-//		 try {
-//             URL feedUrl = new URL("http://rss.nytimes.com/services/xml/rss/nyt/Sports.xml");
-//
-//             SyndFeedInput input = new SyndFeedInput();
-//             SyndFeed feed = input.build(new XmlReader(feedUrl));
-//             System.out.println(feed.toString());
-//             adapter.add(feed.getAuthor() + " " + feed.getTitle());
-//         }
-//         catch (Exception ex) {
-//             ex.printStackTrace();
-//             System.out.println("ERROR: "+ex.getMessage());
-//         }
-		 
 		 
 		 for(Feed f: feedmanager.getFeedlist()){
 			 adapter.add(f.getFeedurl());
 		 }
 		 
-		 
 		 setListAdapter(adapter);
 		 
 	 }
+	 
+	 @Override
+	 public void onResume()
+	 {
+		 super.onResume();
+		 Intent intent = new Intent(getActivity(), FeedLoaderService.class);
+		 getActivity().startService(intent);
+	 }
+	 
 	 
 	 @Override
 	 public void onSaveInstanceState(Bundle state)
@@ -78,6 +85,23 @@ public class FeedListFragment extends ListFragment {
 		 transaction.addToBackStack(null);
 		 transaction.replace(R.id.main_activity, new DetailList());
 		 transaction.commit();
-		 
+	 }
+	 
+	 
+	 private class FeedReceiver extends BroadcastReceiver
+	 {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String feed = intent.getStringExtra(FEED_MESSAGE);
+			ArrayAdapter<String> adapter = (ArrayAdapter) getListAdapter();
+			adapter.add(feed);
+		}
+	 }
+	 
+	 @Override
+	 public void onDestroy()
+	 {
+		 LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(feedReceiver);
+		 super.onDestroy();
 	 }
 }
