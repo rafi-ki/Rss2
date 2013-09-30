@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Rss</string>
-    <string name="action_subscribe">subscribe to feed</string>
+    <string name="action_subscribe">subscribe</string>
     <string name="subscribe_ok_button">subscribe</string>
 
 </resources>

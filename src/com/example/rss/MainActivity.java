@@ -51,7 +51,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	@Override 
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) { 
 		MenuInflater i = new MenuInflater(this); 
-		i.inflate(R.id.action_subscribe, menu); 
+		i.inflate(R.menu.main, menu); 
 		return super.onCreateOptionsMenu(menu); 
 	} 
 	
@@ -65,11 +65,9 @@ public class MainActivity extends SherlockFragmentActivity {
         	transaction.addToBackStack(null);
         	transaction.replace(R.id.main_activity, new SubscriberFragment());
         	transaction.commit();
-            return true;
         }
-        else{
+        
             return super.onOptionsItemSelected(item);
-		}
 
 	}
 
