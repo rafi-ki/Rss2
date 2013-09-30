@@ -11,6 +11,7 @@ import at.diamonddogs.data.dataobjects.WebRequest;
 import at.diamonddogs.service.net.HttpServiceAssister;
 import at.diamonddogs.service.processor.ServiceProcessor;
 
+import com.example.rss.parser.CustomRssReader;
 import com.example.rss.parser.RssReader;
 
 public class FeedLoaderService extends IntentService {
@@ -22,7 +23,7 @@ public class FeedLoaderService extends IntentService {
 		super("FeedLoaderService");
 		feedManager = SubscribedFeedManager.getInstance();
 		
-		assister = new HttpServiceAssister(this);
+//		assister = new HttpServiceAssister(this);
 	}
 	
 	
@@ -48,7 +49,13 @@ public class FeedLoaderService extends IntentService {
 			try{
 				//TODO do it the right way
 				URL feedUrl = new URL(feed.getFeedurl());
-				assister.runWebRequest(new RssHandler(), createGetRssRequest(feedUrl), new RssReader());
+				// http-client
+//				assister.bindService();
+//				assister.runWebRequest(new RssHandler(), createGetRssRequest(feedUrl), new RssReader());
+			
+				//custom rss reader
+				CustomRssReader reader = CustomRssReader.getInstance();
+				reader.read(feed.getFeedurl());
 			}
             catch (Exception ex) {
                 ex.printStackTrace();
@@ -57,7 +64,7 @@ public class FeedLoaderService extends IntentService {
         }
 	}
 	
-	private static final class RssHandler extends Handler {
+	private final class RssHandler extends Handler {
 		/**
 		 * {@inheritDoc}
 		 */
