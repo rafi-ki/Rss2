@@ -14,9 +14,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.rss.Feed;
+import com.example.rss.FeedLink;
 import com.example.rss.FeedLoaderService;
-import com.example.rss.FeedManager;
+import com.example.rss.SubscribedFeedManager;
 import com.example.rss.R;
 
 public class FeedListFragment extends ListFragment {
@@ -25,7 +25,7 @@ public class FeedListFragment extends ListFragment {
 	private final static String FEED_COMMUNICATOR = "receive feeds";
 	private final static String FEED_MESSAGE = "feed";
 	private int lastPosition;
-	private FeedManager feedmanager;
+	private SubscribedFeedManager feedmanager;
 	private BroadcastReceiver feedReceiver;
 	
 	@Override
@@ -34,7 +34,7 @@ public class FeedListFragment extends ListFragment {
 		super.onCreate(savedInstanceState);
 		 System.out.println("FeedList-Fragment created");
 		 
-		 feedmanager= FeedManager.getInstance();
+		 feedmanager= SubscribedFeedManager.getInstance();
 		 feedReceiver = new FeedReceiver();
 		 
 		 IntentFilter filter = new IntentFilter(FEED_COMMUNICATOR);
@@ -51,7 +51,7 @@ public class FeedListFragment extends ListFragment {
 		 
 		 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_activated_1);
 		 
-		 for(Feed f: feedmanager.getFeedlist()){
+		 for(FeedLink f: feedmanager.getFeedlist()){
 			 adapter.add(f.getFeedurl());
 		 }
 		 

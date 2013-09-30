@@ -3,25 +3,25 @@ package com.example.rss;
 import java.util.LinkedList;
 
 
-public class FeedManager {
-	public static FeedManager instance;
-	private LinkedList <Feed> feedlist;
+public class SubscribedFeedManager {
+	public static SubscribedFeedManager instance;
+	private LinkedList <FeedLink> feedlist;
 	
-	protected FeedManager(){
+	protected SubscribedFeedManager(){
 		instance=this;
-		feedlist=new LinkedList<Feed>();
+		feedlist=new LinkedList<FeedLink>();
 	}
 	
-	public static FeedManager getInstance(){
+	public static SubscribedFeedManager getInstance(){
 		if (instance != null){
 			return instance;
 		}
 		else{
-			return new FeedManager();
+			return new SubscribedFeedManager();
 		}
 	}
 	
-	public boolean addFeed(Feed feedtoadd){
+	public boolean addFeed(FeedLink feedtoadd){
 		feedlist.add(feedtoadd);
 		return true;
 	}
@@ -31,7 +31,7 @@ public class FeedManager {
 		return false;
 	}
 
-	public LinkedList <Feed> getFeedlist() {
+	public LinkedList <FeedLink> getFeedlist() {
 		return feedlist;
 	}
 	

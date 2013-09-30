@@ -15,11 +15,11 @@ import com.sun.syndication.io.XmlReader;
 public class FeedLoaderService extends IntentService {
 	
 	
-	FeedManager feedManager;
+	SubscribedFeedManager feedManager;
 	
 	public FeedLoaderService() {
 		super("FeedLoaderService");
-		feedManager = FeedManager.getInstance();
+		feedManager = SubscribedFeedManager.getInstance();
 	}
 	
 	
@@ -38,15 +38,15 @@ public class FeedLoaderService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		feedManager.restoreSubscribedFeeds();
-		LinkedList<Feed> feeds = feedManager.getFeedlist();
-		for (Feed feed : feeds)
+		LinkedList<FeedLink> feeds = feedManager.getFeedlist();
+		for (FeedLink feed : feeds)
 		{
 			try{
 				//TODO do it the right way
-				URL feedUrl = new URL(feed.getFeedurl());
-				SyndFeedInput input = new SyndFeedInput();
-                SyndFeed synFeed = input.build(new XmlReader(feedUrl));
-                
+//				URL feedUrl = new URL(feed.getFeedurl());
+//				SyndFeedInput input = new SyndFeedInput();
+//                SyndFeed synFeed = input.build(new XmlReader(feedUrl));
+//                
 //                Intent intent = new Intent("receive feeds");
 //                intent.putExtra("feed", synFeed.getLink());
 //                LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(intent); // send broadcast

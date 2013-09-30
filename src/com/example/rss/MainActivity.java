@@ -16,19 +16,33 @@ import com.example.rss.fragments.SubscriberFragment;
 
 public class MainActivity extends Activity {
 
-	private FeedManager feedmanager;
+	private SubscribedFeedManager feedmanager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		feedmanager= FeedManager.getInstance(); //gets instance of the feedmanager (singelton)
+		feedmanager= SubscribedFeedManager.getInstance(); //gets instance of the feedmanager (singelton)
 		
 		FragmentManager fragmentManager = getFragmentManager();
 		 FragmentTransaction transaction = fragmentManager.beginTransaction();
 		 transaction.add(R.id.main_activity, new FeedListFragment());
 		 transaction.commit();
+	}
+	
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		//TODO start service here
+	}
+	
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		//TODO stop service here, if necessary
 	}
 
 	@Override
@@ -66,7 +80,7 @@ public class MainActivity extends Activity {
         
         String feedurlstring = urlinput.getEditableText().toString();
         if(feedurlstring!=""){
-        	feedmanager.addFeed(new Feed(feedurlstring));
+        	feedmanager.addFeed(new FeedLink(feedurlstring));
         }
         
         FragmentManager fragmentManager = getFragmentManager();

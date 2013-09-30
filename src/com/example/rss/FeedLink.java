@@ -1,9 +1,9 @@
 package com.example.rss;
 
-public class Feed {
+public class FeedLink {
 	private String feedurl;
 	
-	public Feed(String url){
+	public FeedLink(String url){
 		setFeedurl(url);
 	}
 
