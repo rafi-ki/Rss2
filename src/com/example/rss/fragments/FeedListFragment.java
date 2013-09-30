@@ -1,25 +1,27 @@
 package com.example.rss.fragments;
 
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.app.ListFragment;
+
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.rss.FeedLink;
 import com.example.rss.FeedLoaderService;
 import com.example.rss.SubscribedFeedManager;
 import com.example.rss.R;
 
-public class FeedListFragment extends ListFragment {
+public class FeedListFragment extends SherlockListFragment {
 	
 	private final static String STATE_KEY = "curPos";
 	private final static String FEED_COMMUNICATOR = "receive feeds";
@@ -46,6 +48,7 @@ public class FeedListFragment extends ListFragment {
 	 {
 		 super.onActivityCreated(savedInstanceState);
 		 
+		 System.out.println("feedlist on activity created");
 		 if (savedInstanceState != null) // save state
 			 lastPosition = savedInstanceState.getInt(STATE_KEY, 0);
 		 
@@ -63,6 +66,8 @@ public class FeedListFragment extends ListFragment {
 	 public void onResume()
 	 {
 		 super.onResume();
+		 Intent intent = new Intent(getActivity(), FeedLoaderService.class);
+		 getActivity().startService(intent);
 	 }
 	 
 	 

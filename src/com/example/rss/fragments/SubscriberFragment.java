@@ -1,14 +1,15 @@
 package com.example.rss.fragments;
 
+
+import com.actionbarsherlock.app.SherlockFragment;
 import com.example.rss.R;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class SubscriberFragment extends Fragment {
+public class SubscriberFragment extends SherlockFragment {
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

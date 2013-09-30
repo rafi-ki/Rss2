@@ -1,5 +1,6 @@
 package com.example.rss.fragments;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.example.rss.R;
 
 import android.app.Fragment;
@@ -9,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class DetailList extends Fragment {
+public class DetailList extends SherlockFragment {
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

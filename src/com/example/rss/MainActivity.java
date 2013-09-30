@@ -1,24 +1,21 @@
 package com.example.rss;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Intent;
+
 import android.os.Bundle;
-import android.view.Menu;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.example.rss.fragments.DetailList;
 import com.example.rss.fragments.FeedListFragment;
 import com.example.rss.fragments.SubscriberFragment;
 
-public class MainActivity extends SherlockActivity {
+public class MainActivity extends SherlockFragmentActivity {
 
 	private SubscribedFeedManager feedmanager;
 	
@@ -29,12 +26,10 @@ public class MainActivity extends SherlockActivity {
 		
 		ActionBar bar = getSupportActionBar();
 		
-		Intent intent = new Intent(this, FeedLoaderService.class);
-		startService(intent);
 		
 		feedmanager= SubscribedFeedManager.getInstance(); //gets instance of the feedmanager (singelton)
 		
-		FragmentManager fragmentManager = getFragmentManager();
+		FragmentManager fragmentManager = getSupportFragmentManager();
 		 FragmentTransaction transaction = fragmentManager.beginTransaction();
 		 transaction.add(R.id.main_activity, new FeedListFragment());
 		 transaction.commit();
@@ -44,7 +39,6 @@ public class MainActivity extends SherlockActivity {
 	protected void onResume()
 	{
 		super.onResume();
-		//TODO start service here
 	}
 	
 	@Override
@@ -65,8 +59,8 @@ public class MainActivity extends SherlockActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
 	    // Handle item selection
-        if(item.getItemId() == R.id.action_subscribe){
-        	FragmentManager fragmentManager = getFragmentManager();
+        if(item.getItemId() ==  R.id.action_subscribe){
+        	FragmentManager fragmentManager = getSupportFragmentManager();
         	FragmentTransaction transaction = fragmentManager.beginTransaction();
         	transaction.addToBackStack(null);
         	transaction.replace(R.id.main_activity, new SubscriberFragment());
@@ -91,7 +85,7 @@ public class MainActivity extends SherlockActivity {
         	feedmanager.addFeed(new FeedLink(feedurlstring));
         }
         
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack();
       // FragmentTransaction transaction = fragmentManager.beginTransaction();
         //transaction.replace(R.id.main_activity, new FeedListFragment());
