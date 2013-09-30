@@ -24,9 +24,6 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		Intent intent = new Intent(this, FeedLoaderService.class);
-		startService(intent);
-		
 		feedmanager= SubscribedFeedManager.getInstance(); //gets instance of the feedmanager (singelton)
 		
 		FragmentManager fragmentManager = getFragmentManager();
@@ -39,7 +36,6 @@ public class MainActivity extends Activity {
 	protected void onResume()
 	{
 		super.onResume();
-		//TODO start service here
 	}
 	
 	@Override

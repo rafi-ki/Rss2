@@ -42,6 +42,7 @@ public class FeedLoaderService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		feedManager.restoreSubscribedFeeds();
 		LinkedList<FeedLink> feeds = feedManager.getFeedlist();
+		System.out.println("loading feeds " + feeds.size());
 		for (FeedLink feed : feeds)
 		{
 			try{
@@ -56,7 +57,7 @@ public class FeedLoaderService extends IntentService {
         }
 	}
 	
-	private final class RssHandler extends Handler {
+	private static final class RssHandler extends Handler {
 		/**
 		 * {@inheritDoc}
 		 */
@@ -64,12 +65,15 @@ public class FeedLoaderService extends IntentService {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			if (msg.what == RssReader.ID) {
+				System.out.println("right id");
 				if (msg.arg1 == ServiceProcessor.RETURN_MESSAGE_OK) {
 					String[] items = (String[]) msg.obj;
+					System.out.println("handler is called with " + items.length + " items");
 					for (String item : items)
 						System.out.println(item);
 				}
 			}
+			
 		}
 	}
 	

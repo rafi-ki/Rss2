@@ -46,6 +46,7 @@ public class FeedListFragment extends ListFragment {
 	 {
 		 super.onActivityCreated(savedInstanceState);
 		 
+		 System.out.println("feedlist on activity created");
 		 if (savedInstanceState != null) // save state
 			 lastPosition = savedInstanceState.getInt(STATE_KEY, 0);
 		 
@@ -63,6 +64,8 @@ public class FeedListFragment extends ListFragment {
 	 public void onResume()
 	 {
 		 super.onResume();
+		 Intent intent = new Intent(getActivity(), FeedLoaderService.class);
+		 getActivity().startService(intent);
 	 }
 	 
 	 
