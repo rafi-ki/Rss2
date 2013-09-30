@@ -63,8 +63,6 @@ public class FeedListFragment extends ListFragment {
 	 public void onResume()
 	 {
 		 super.onResume();
-		 Intent intent = new Intent(getActivity(), FeedLoaderService.class);
-		 getActivity().startService(intent);
 	 }
 	 
 	 
