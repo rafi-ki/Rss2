@@ -1,23 +1,16 @@
 package com.example.rss;
 
-import java.net.URL;
-import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
-import at.diamonddogs.data.dataobjects.WebRequest;
-import at.diamonddogs.service.net.HttpServiceAssister;
-import at.diamonddogs.service.processor.ServiceProcessor;
 
 import com.example.rss.model.RssFeed;
 import com.example.rss.parser.CustomRssReader;
-import com.example.rss.parser.RssReader;
+import com.example.rss.persistance.FeedManager;
 
 public class FeedLoaderService extends IntentService {
-	
-	private HttpServiceAssister assister;
 	private FeedManager feedManager;
 	
 	public FeedLoaderService() {
@@ -40,20 +33,20 @@ public class FeedLoaderService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		LinkedList<FeedLink> feeds = feedManager.getFeedlist();
-		System.out.println("loading feeds " + feeds.size());
-		for (FeedLink feed : feeds)
+		Map<String, RssFeed> feedMap = feedManager.getFeedMap();
+		Set<String> keys = feedMap.keySet();
+		//the key is the link
+		for (String key : keys)
 		{
 			try{
-				//custom rss reader
 				CustomRssReader reader = CustomRssReader.getInstance();
-				RssFeed rss = reader.read(feed.getFeedurl());
-				System.out.println(rss.toString());
+				RssFeed rss = reader.read(key);
+				feedMap.put(key, rss); //override existing -> update
 			}
             catch (Exception ex) {
                 ex.printStackTrace();
                 System.out.println("ERROR: "+ex.getMessage());
             }
-        }
+		}
 	}
 }

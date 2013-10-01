@@ -1,12 +1,16 @@
 package com.example.rss.model;
 
+import java.io.Serializable;
+
 /**
  * This class is an represents a Feed Item.
  * It is used as a DataHolder.
  */
-public class FeedItem
+public class FeedItem implements Serializable
 {
-    private String title;
+	private static final long serialVersionUID = 1709487133434245708L;
+	
+	private String title;
     private String description;
     private String link;
     private String feedId;

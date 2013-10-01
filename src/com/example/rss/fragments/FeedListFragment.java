@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,7 +25,8 @@ import android.widget.SimpleAdapter;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.rss.FeedLoaderService;
 import com.example.rss.R;
-import com.example.rss.FeedManager;
+import com.example.rss.model.RssFeed;
+import com.example.rss.persistance.FeedManager;
 
 public class FeedListFragment extends SherlockListFragment {
 	
@@ -60,9 +62,8 @@ public class FeedListFragment extends SherlockListFragment {
 //		 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_activated_1);
 		 List<Map<String, String>> list = getFeedData();
 		 SimpleAdapter adapter = new SimpleAdapter(getActivity(), list,
-					R.layout.subscribed_lv_item, new String[] { "title", "link",
-							"date" }, new int[] { R.id.subscribed_lv_item_title,
-							R.id.subscribed_lv_item_link, R.id.subscribed_lv_item_date }
+					R.layout.subscribed_lv_item, new String[] { "title",
+							"date" }, new int[] { R.id.subscribed_lv_item_title, R.id.subscribed_lv_item_date }
 			);
 		 
 		 setListAdapter(adapter);
@@ -72,18 +73,21 @@ public class FeedListFragment extends SherlockListFragment {
 	 //TODO return empty list if ready
 	 private List<Map<String, String>> getFeedData()
 	 {
-		 List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-		 Map map = new HashMap<String, String>();
-		 map.put("title", "Feed Title1");
-		 map.put("link", "http://blablaliej.com");
-		 map.put("date", "12.02.2013");
-		 list.add(map);
-		 map = new HashMap<String, String>();
-		 map.put("title", "Feed Title2");
-		 map.put("link", "http:///hurra.com");
-		 map.put("date", "30.01.2011");
-		 list.add(map);
-		 return list;
+		 List<Map<String, String>> returnedList = new ArrayList<Map<String, String>>();
+		 Map<String, String> map = new HashMap<String, String>();
+		 
+		 Map<String, RssFeed> feedMap = feedmanager.getFeedMap();
+		 Set<String> keys = feedMap.keySet();
+		 RssFeed feed = null;
+		 for (String key : keys)
+		 {
+			 feed = feedMap.get(key);
+			 map.put("title", feed.getTitle());
+			 map.put("date", feed.getDate());
+			 returnedList.add(map);
+		 }
+		
+		 return returnedList;
 	 }
 	 
 	 @Override

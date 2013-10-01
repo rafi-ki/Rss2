@@ -1,5 +1,6 @@
 package com.example.rss.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,9 +8,11 @@ import java.util.List;
  * This class represents an RSS-Feed.
  * It is used as a DataHolder.
  */
-public class RssFeed
+public class RssFeed implements Serializable
 {
-    private String title;
+	private static final long serialVersionUID = 2700137136490411934L;
+	
+	private String title;
     private String link;
     private String description;
     private String date;

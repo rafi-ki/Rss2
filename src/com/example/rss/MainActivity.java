@@ -8,12 +8,13 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.example.rss.fragments.FeedListFragment;
 import com.example.rss.fragments.SubscriberFragment;
+import com.example.rss.model.RssFeed;
+import com.example.rss.persistance.FeedManager;
 
 public class MainActivity extends SherlockFragmentActivity {
 
@@ -27,6 +28,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		ActionBar bar = getSupportActionBar();
 		
 		feedmanager= FeedManager.getInstance(); //gets instance of the feedmanager (singelton)
+		feedmanager.restoreSubscribedFeeds(this);
 		
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		 FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -45,6 +47,13 @@ public class MainActivity extends SherlockFragmentActivity {
 	{
 		super.onPause();
 		//TODO stop service here, if necessary
+	}
+	
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		feedmanager.storeSubscribedFeeds(this);
 	}
 
 	@Override 
@@ -77,9 +86,11 @@ public class MainActivity extends SherlockFragmentActivity {
         EditText urlinput = (EditText) findViewById(R.id.subscribe_url_input);
         System.out.println("Url: "+urlinput.getEditableText());
         
+        //TODO load just one feed with another service and add it to map
+        
         String feedurlstring = urlinput.getEditableText().toString();
         if(feedurlstring!=""){
-        	feedmanager.addFeed(new FeedLink(feedurlstring));
+        	feedmanager.addRssFeed(feedurlstring, new RssFeed("Title", feedurlstring, "bla desc", "date"));
         }
         
         FragmentManager fragmentManager = getSupportFragmentManager();
