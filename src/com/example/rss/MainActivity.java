@@ -26,7 +26,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		
 		ActionBar bar = getSupportActionBar();
 		
-		
 		feedmanager= SubscribedFeedManager.getInstance(); //gets instance of the feedmanager (singelton)
 		
 		FragmentManager fragmentManager = getSupportFragmentManager();

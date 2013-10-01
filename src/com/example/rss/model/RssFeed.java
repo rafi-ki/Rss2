@@ -12,17 +12,15 @@ public class RssFeed
     private String title;
     private String link;
     private String description;
-    private String language;
     private String date;
 
     private List<FeedItem> feedItems = new ArrayList<FeedItem>();
 
-    public RssFeed(String title, String link, String description, String language, String date)
+    public RssFeed(String title, String link, String description, String date)
     {
         this.title = title;
         this.link = link;
         this.description = description;
-        this.language = language;
         this.date = date;
     }
 
@@ -50,14 +48,6 @@ public class RssFeed
         this.description = description;
     }
 
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
     public String getDate() {
         return date;
     }
@@ -77,5 +67,19 @@ public class RssFeed
     public void addFeedItem(FeedItem feedItem)
     {
         this.feedItems.add(feedItem);
+    }
+    
+    @Override
+    public String toString()
+    {
+    	StringBuilder builder = new StringBuilder();
+    	builder.append("RSS Feed\n");
+    	builder.append("Title:" + this.title + "\n");
+    	builder.append("Link:" + this.link + "\n");
+    	builder.append("Description:" + this.description + "\n");
+    	for(FeedItem item : feedItems)
+    		builder.append(item.toString() + "\n");
+    	
+    	return builder.toString();
     }
 }

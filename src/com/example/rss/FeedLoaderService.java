@@ -11,6 +11,7 @@ import at.diamonddogs.data.dataobjects.WebRequest;
 import at.diamonddogs.service.net.HttpServiceAssister;
 import at.diamonddogs.service.processor.ServiceProcessor;
 
+import com.example.rss.model.RssFeed;
 import com.example.rss.parser.CustomRssReader;
 import com.example.rss.parser.RssReader;
 
@@ -22,8 +23,6 @@ public class FeedLoaderService extends IntentService {
 	public FeedLoaderService() {
 		super("FeedLoaderService");
 		feedManager = SubscribedFeedManager.getInstance();
-		
-//		assister = new HttpServiceAssister(this);
 	}
 	
 	
@@ -47,15 +46,12 @@ public class FeedLoaderService extends IntentService {
 		for (FeedLink feed : feeds)
 		{
 			try{
-				//TODO do it the right way
 				URL feedUrl = new URL(feed.getFeedurl());
-				// http-client
-//				assister.bindService();
-//				assister.runWebRequest(new RssHandler(), createGetRssRequest(feedUrl), new RssReader());
 			
 				//custom rss reader
 				CustomRssReader reader = CustomRssReader.getInstance();
-				reader.read(feed.getFeedurl());
+				RssFeed rss = reader.read(feed.getFeedurl());
+				System.out.println(rss.toString());
 			}
             catch (Exception ex) {
                 ex.printStackTrace();
@@ -84,23 +80,6 @@ public class FeedLoaderService extends IntentService {
 		}
 	}
 	
-	private WebRequest createGetRssRequest(URL url) {
-		WebRequest wr = new WebRequest();
-		wr.setUrl(url);
-		wr.setProcessorId(RssReader.ID);
 
-		// This is the important part, telling HttpService how long a WebRequest
-		// will be saved. Since RssProcessor extends XMLProcessor, which extends
-		// DataProcessor, the WebRequest's data will be cached automatically,
-		// provided that cacheTime is not CACHE_NO.
-		wr.setCacheTime(5000);
-
-		// Enables offline caching. usually, cache data is deleted on retrieval
-		// if it has expired even if the device is not online. If this flag is
-		// set to true, cache data will not be removed if it has expired as long
-		// as the device was offline during the request
-		wr.setUseOfflineCache(true);
-		return wr;
-	}
 	
 }
