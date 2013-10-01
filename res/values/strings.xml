@@ -4,5 +4,6 @@
     <string name="app_name">Rss</string>
     <string name="action_subscribe">subscribe</string>
     <string name="subscribe_ok_button">subscribe</string>
+    <string name="subscribe_message">please enter a url</string>
 
 </resources>
