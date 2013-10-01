@@ -17,7 +17,7 @@ import com.example.rss.fragments.SubscriberFragment;
 
 public class MainActivity extends SherlockFragmentActivity {
 
-	private SubscribedFeedManager feedmanager;
+	private FeedManager feedmanager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		
 		ActionBar bar = getSupportActionBar();
 		
-		feedmanager= SubscribedFeedManager.getInstance(); //gets instance of the feedmanager (singelton)
+		feedmanager= FeedManager.getInstance(); //gets instance of the feedmanager (singelton)
 		
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		 FragmentTransaction transaction = fragmentManager.beginTransaction();

@@ -18,11 +18,11 @@ import com.example.rss.parser.RssReader;
 public class FeedLoaderService extends IntentService {
 	
 	private HttpServiceAssister assister;
-	private SubscribedFeedManager feedManager;
+	private FeedManager feedManager;
 	
 	public FeedLoaderService() {
 		super("FeedLoaderService");
-		feedManager = SubscribedFeedManager.getInstance();
+		feedManager = FeedManager.getInstance();
 	}
 	
 	

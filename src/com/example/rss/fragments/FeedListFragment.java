@@ -22,10 +22,9 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.example.rss.FeedLink;
 import com.example.rss.FeedLoaderService;
 import com.example.rss.R;
-import com.example.rss.SubscribedFeedManager;
+import com.example.rss.FeedManager;
 
 public class FeedListFragment extends SherlockListFragment {
 	
@@ -33,7 +32,7 @@ public class FeedListFragment extends SherlockListFragment {
 	private final static String FEED_COMMUNICATOR = "receive feeds";
 	private final static String FEED_MESSAGE = "feed";
 	private int lastPosition;
-	private SubscribedFeedManager feedmanager;
+	private FeedManager feedmanager;
 	private BroadcastReceiver feedReceiver;
 	
 	@Override
@@ -42,7 +41,7 @@ public class FeedListFragment extends SherlockListFragment {
 		super.onCreate(savedInstanceState);
 		 System.out.println("FeedList-Fragment created");
 		 
-		 feedmanager= SubscribedFeedManager.getInstance();
+		 feedmanager= FeedManager.getInstance();
 		 feedReceiver = new FeedReceiver();
 		 
 		 IntentFilter filter = new IntentFilter(FEED_COMMUNICATOR);
