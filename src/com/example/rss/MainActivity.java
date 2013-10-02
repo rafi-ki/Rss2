@@ -103,11 +103,9 @@ public class MainActivity extends SherlockFragmentActivity {
 	//Button method to subscribe to the feed with the url from the edittextview of the same fragment
 	public void subscribeButtonClick(View v) {
         System.out.println("button was clicked");
-        
       //hide keyboard
-		 InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
-		 imm.hideSoftInputFromWindow(findViewById(R.id.subscribe_url_input).getWindowToken(), 0);
-        
+		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(findViewById(R.id.subscribe_url_input).getWindowToken(), 0);
         EditText urlinput = (EditText) findViewById(R.id.subscribe_url_input);
         String feedurlstring = urlinput.getEditableText().toString();
         System.out.println("Url: "+urlinput.getEditableText());
