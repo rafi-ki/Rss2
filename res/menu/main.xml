@@ -11,6 +11,7 @@
         android:id="@+id/action_subscribe"
         android:title="@string/action_subscribe"
         android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_new"
         />
 
 </menu>
