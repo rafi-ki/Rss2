@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
@@ -27,7 +28,8 @@ import com.example.rss.persistance.RssDefines;
 public class MainActivity extends SherlockFragmentActivity {
 
 	private FeedManager feedmanager;
-	private FragmentDistributorReceiver receiver;
+	private FragmentDistributorReceiver distributorReceiver;
+	private UpdateFeedListReceiver updateReceiver;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,42 +37,43 @@ public class MainActivity extends SherlockFragmentActivity {
 		setContentView(R.layout.activity_main);
 		
 		ActionBar bar = getSupportActionBar();
-		receiver = new FragmentDistributorReceiver();
+		distributorReceiver = new FragmentDistributorReceiver();
+		updateReceiver = new UpdateFeedListReceiver();
 		
 		feedmanager = FeedManager.getInstance(); //gets instance of the feedmanager (singelton)
 		feedmanager.restoreSubscribedFeeds(this);
 		
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		 FragmentTransaction transaction = fragmentManager.beginTransaction();
-		 transaction.add(R.id.main_activity, new FeedListFragment());
-		 transaction.commit();
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		transaction.add(R.id.main_activity, new FeedListFragment());
+		transaction.commit();
 	}
 	
 	@Override
 	protected void onResume()
 	{
 		super.onResume();
+		System.out.println("main onResume()");
 		
-		//TODO add local broadcast receiver
 		IntentFilter filter = new IntentFilter(RssDefines.OPEN_FEED_LIST_FRAGMENT);
 		filter.addAction(RssDefines.OPEN_DETAIL_FRAGMENT);
 		filter.addAction(RssDefines.OPEN_SUBSCRIBE_FRAGMENT);
-		LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+		LocalBroadcastManager.getInstance(this).registerReceiver(distributorReceiver, filter);
+		
+		filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
+		LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver, filter);
 	}
 	
 	@Override
 	protected void onPause()
 	{
 		super.onPause();
-		LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-		//TODO stop service here, if necessary
-	}
-	
-	@Override
-	protected void onStop()
-	{
-		super.onStop();
-		feedmanager.storeSubscribedFeeds(this);
+		System.out.println("main onPause()");
+		feedmanager.storeSubscribedFeeds(this); // store current feeds
+		
+		// unregister receiver
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(distributorReceiver); 
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver);
 	}
 
 	@Override 
@@ -101,8 +104,6 @@ public class MainActivity extends SherlockFragmentActivity {
         EditText urlinput = (EditText) findViewById(R.id.subscribe_url_input);
         System.out.println("Url: "+urlinput.getEditableText());
         
-        //TODO load just one feed with another service and add it to map
-        
         String feedurlstring = urlinput.getEditableText().toString();
         if(feedurlstring!=""){
         	feedmanager.addRssFeed(feedurlstring, new RssFeed("Title", feedurlstring, "bla desc", "date"));
@@ -110,9 +111,6 @@ public class MainActivity extends SherlockFragmentActivity {
         
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.popBackStack();
-      // FragmentTransaction transaction = fragmentManager.beginTransaction();
-        //transaction.replace(R.id.main_activity, new FeedListFragment());
-       // transaction.commit();
     }
 	
 	private class FragmentDistributorReceiver extends BroadcastReceiver
@@ -123,16 +121,17 @@ public class MainActivity extends SherlockFragmentActivity {
 			
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			FragmentTransaction transaction = fragmentManager.beginTransaction();
+			
 			if (action.equals(RssDefines.OPEN_DETAIL_FRAGMENT))
 			{
 				String link = intent.getExtras().getString(RssDefines.EXTRA_DATA_DETAILS_LINK);
-				 transaction.addToBackStack(null);
-				 DetailList detailList = new DetailList();
-				 Bundle bundle = new Bundle();
-				 bundle.putString(RssDefines.EXTRA_DATA_DETAILS_LINK, link);
-				 detailList.setArguments(bundle);
-				 transaction.replace(R.id.main_activity, detailList);
-				 transaction.commit();
+				transaction.addToBackStack(null);
+				DetailList detailList = new DetailList();
+				Bundle bundle = new Bundle();
+				bundle.putString(RssDefines.EXTRA_DATA_DETAILS_LINK, link);
+				detailList.setArguments(bundle);
+				transaction.replace(R.id.main_activity, detailList);
+				transaction.commit();
 			}
 			else if (action.equals(RssDefines.OPEN_FEED_LIST_FRAGMENT))
 			{
@@ -145,6 +144,25 @@ public class MainActivity extends SherlockFragmentActivity {
 				transaction.addToBackStack(null);
 				transaction.replace(R.id.main_activity, new SubscriberFragment());
 				transaction.commit();
+			}
+		}
+	}
+	
+	private class UpdateFeedListReceiver extends BroadcastReceiver
+	{
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			FragmentManager fragmentManager = getSupportFragmentManager();
+			if (action.equals(RssDefines.REFRESH_FEED_LIST))
+			{
+				System.out.println("Received update feed list message");
+				Fragment fra = fragmentManager.findFragmentById(R.id.main_activity);
+				if (fra instanceof FeedListFragment)
+				{
+					FeedListFragment feedListFragment = (FeedListFragment) fra;
+					feedListFragment.setFeedMapToListView();
+				}
 			}
 		}
 	}

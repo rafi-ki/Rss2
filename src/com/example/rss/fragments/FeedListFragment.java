@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
@@ -27,19 +30,20 @@ import com.example.rss.persistance.RssDefines;
 
 public class FeedListFragment extends SherlockListFragment {
 	
-	private final static String STATE_KEY = "curPos";
-	private final static String FEED_COMMUNICATOR = "receive feeds";
-	private final static String FEED_MESSAGE = "feed";
-	private int lastPosition;
+	private static final String TITLE_REF = "title";
+	private static final String LINK_REF = "link";	
+	
 	private FeedManager feedmanager;
+	private RefreshFeedListReceiver receiver;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		 System.out.println("FeedList-Fragment created");
+		System.out.println("FeedList-Fragment created");
 		 
-		 feedmanager= FeedManager.getInstance();
+		feedmanager= FeedManager.getInstance();
+		receiver = new RefreshFeedListReceiver();
 	}
 		
 	 @Override
@@ -47,33 +51,31 @@ public class FeedListFragment extends SherlockListFragment {
 	 {
 		 super.onActivityCreated(savedInstanceState);
 		 
-		 System.out.println("feedlist on activity created");
-		 if (savedInstanceState != null) // save state
-			 lastPosition = savedInstanceState.getInt(STATE_KEY, 0);
-		 
-		 List<Map<String, String>> list = getFeedData();
-		 SimpleAdapter adapter = new SimpleAdapter(getActivity(), list,
-					R.layout.subscribed_lv_item, new String[] { "title",
-							"link" }, new int[] { R.id.subscribed_lv_item_title, R.id.subscribed_lv_item_link }
-			);
-		 
+		 setFeedMapToListView();
+	 }
+	 
+	 public void setFeedMapToListView()
+	 {
+		 List<Map<String, String>> items = getFeedData();
+		 SimpleAdapter adapter = new SimpleAdapter(getActivity(), items,
+				 	R.layout.subscribed_lv_item, new String[] { TITLE_REF, LINK_REF },
+				 	new int[] { R.id.subscribed_lv_item_title, R.id.subscribed_lv_item_link }
+		 );
 		 setListAdapter(adapter);
-		 
 	 }
 	 
 	 private List<Map<String, String>> getFeedData()
 	 {
 		 List<Map<String, String>> returnedList = new ArrayList<Map<String, String>>();
 		 Map<String, String> map = new HashMap<String, String>();
-		 
 		 Map<String, RssFeed> feedMap = feedmanager.getFeedMap();
 		 Set<String> keys = feedMap.keySet();
 		 RssFeed feed = null;
 		 for (String key : keys)
 		 {
 			 feed = feedMap.get(key);
-			 map.put("title", feed.getTitle());
-			 map.put("link", key);
+			 map.put(TITLE_REF, feed.getTitle());
+			 map.put(LINK_REF, key);
 			 returnedList.add(map);
 		 }
 		
@@ -84,16 +86,20 @@ public class FeedListFragment extends SherlockListFragment {
 	 public void onResume()
 	 {
 		 super.onResume();
+		 
+		 //define receiver for refreshing feed list
+		 IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
+		 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
+		 
 		 Intent intent = new Intent(getActivity(), FeedLoaderService.class);
 		 getActivity().startService(intent);
 	 }
 	 
-	 
 	 @Override
-	 public void onSaveInstanceState(Bundle state)
+	 public void onPause()
 	 {
-		 super.onSaveInstanceState(state);
-		 state.putInt(STATE_KEY, lastPosition);
+		 super.onPause();
+		 LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
 	 }
 	 
 	 @Override
@@ -113,5 +119,14 @@ public class FeedListFragment extends SherlockListFragment {
 	 public void onDestroy()
 	 {
 		 super.onDestroy();
+	 }
+	 
+	 private class RefreshFeedListReceiver extends BroadcastReceiver
+	 {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(RssDefines.REFRESH_FEED_LIST))
+				setFeedMapToListView(); // refresh feed list
+		}
 	 }
 }
