@@ -67,7 +67,7 @@ public class CustomRssReader {
 			return feed;
 		}
 		catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println("wrong url");
 		}
 		
 		return null;

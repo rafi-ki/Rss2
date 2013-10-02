@@ -1,4 +1,4 @@
-package com.example.rss;
+package com.example.rss.services;
 
 import java.util.Map;
 import java.util.Set;
@@ -43,7 +43,15 @@ public class FeedLoaderService extends IntentService {
 			try{
 				CustomRssReader reader = CustomRssReader.getInstance();
 				RssFeed rss = reader.read(key);
-				feedMap.put(key, rss); //override existing -> update
+				if (rss != null)
+				{
+					System.out.println("loaded feed with url <" + key + "> successfully");
+					feedMap.put(key, rss); //override existing -> update
+				}
+				else
+				{
+					feedMap.remove(key);
+				}
 			}
             catch (Exception ex) {
                 ex.printStackTrace();

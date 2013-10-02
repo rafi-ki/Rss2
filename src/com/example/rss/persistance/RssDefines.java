@@ -6,6 +6,10 @@ public class RssDefines {
 	public static final String OPEN_SUBSCRIBE_FRAGMENT = "open_subscribe_fragment";
 	
 	public static final String EXTRA_DATA_DETAILS_LINK = "extra_data_details_link";
+	public static final String EXTRA_VALIDATE_RSS_RESULT = "extra_validate_rss_result";
 	
 	public static final String REFRESH_FEED_LIST = "refresh_feed_list";
+	public static final String EXTRA_VALIDATE_RSS_URL = "validate_rss_url";
+	public static final String VALIDATE_RSS = "validate_rss";
+	
 }

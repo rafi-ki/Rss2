@@ -5,14 +5,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -21,9 +22,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.example.rss.fragments.DetailList;
 import com.example.rss.fragments.FeedListFragment;
 import com.example.rss.fragments.SubscriberFragment;
-import com.example.rss.model.RssFeed;
 import com.example.rss.persistance.FeedManager;
 import com.example.rss.persistance.RssDefines;
+import com.example.rss.services.ValidateRssService;
 
 public class MainActivity extends SherlockFragmentActivity {
 
@@ -36,7 +37,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		ActionBar bar = getSupportActionBar();
+		getSupportActionBar();
 		distributorReceiver = new FragmentDistributorReceiver();
 		updateReceiver = new UpdateFeedListReceiver();
 		
@@ -61,6 +62,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		LocalBroadcastManager.getInstance(this).registerReceiver(distributorReceiver, filter);
 		
 		filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
+		filter.addAction(RssDefines.VALIDATE_RSS);
 		LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver, filter);
 	}
 	
@@ -102,15 +104,16 @@ public class MainActivity extends SherlockFragmentActivity {
         System.out.println("button was clicked");
         
         EditText urlinput = (EditText) findViewById(R.id.subscribe_url_input);
+        String feedurlstring = urlinput.getEditableText().toString();
         System.out.println("Url: "+urlinput.getEditableText());
         
-        String feedurlstring = urlinput.getEditableText().toString();
-        if(feedurlstring!=""){
-        	feedmanager.addRssFeed(feedurlstring, new RssFeed("Title", feedurlstring, "bla desc", "date"));
-        }
-        
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.popBackStack();
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.main_activity);
+		TextView textView = (TextView) f.getView().findViewById(R.id.subscribe_tv_message);
+		textView.setText("validating! please wait ...");
+		
+		Intent validateIntent = new Intent(this, ValidateRssService.class);
+        validateIntent.putExtra(RssDefines.EXTRA_VALIDATE_RSS_URL, feedurlstring);
+        startService(validateIntent);
     }
 	
 	private class FragmentDistributorReceiver extends BroadcastReceiver
@@ -154,6 +157,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			FragmentManager fragmentManager = getSupportFragmentManager();
+			System.out.println("In updatefeedlistreceiver");
 			if (action.equals(RssDefines.REFRESH_FEED_LIST))
 			{
 				System.out.println("Received update feed list message");
@@ -162,6 +166,21 @@ public class MainActivity extends SherlockFragmentActivity {
 				{
 					FeedListFragment feedListFragment = (FeedListFragment) fra;
 					feedListFragment.setFeedMapToListView();
+				}
+			}
+			if (action.equals(RssDefines.VALIDATE_RSS))
+			{
+				System.out.println("recieved validate rss result");
+				if (intent.getBooleanExtra(RssDefines.EXTRA_VALIDATE_RSS_RESULT, false))
+				{
+					fragmentManager.popBackStack();
+				}
+				else
+				{
+					Fragment f = fragmentManager.findFragmentById(R.id.main_activity);
+					TextView textView = (TextView) f.getView().findViewById(R.id.subscribe_tv_message);
+					textView.setTextColor(Color.RED);
+					textView.setText("wrong url, please enter a valid one");
 				}
 			}
 		}

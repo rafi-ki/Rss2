@@ -22,11 +22,11 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.example.rss.FeedLoaderService;
 import com.example.rss.R;
 import com.example.rss.model.RssFeed;
 import com.example.rss.persistance.FeedManager;
 import com.example.rss.persistance.RssDefines;
+import com.example.rss.services.FeedLoaderService;
 
 public class FeedListFragment extends SherlockListFragment {
 	
@@ -67,18 +67,18 @@ public class FeedListFragment extends SherlockListFragment {
 	 private List<Map<String, String>> getFeedData()
 	 {
 		 List<Map<String, String>> returnedList = new ArrayList<Map<String, String>>();
-		 Map<String, String> map = new HashMap<String, String>();
 		 Map<String, RssFeed> feedMap = feedmanager.getFeedMap();
+		 HashMap<String, String> map = null;
 		 Set<String> keys = feedMap.keySet();
 		 RssFeed feed = null;
 		 for (String key : keys)
 		 {
+			 map = new HashMap<String, String>();
 			 feed = feedMap.get(key);
 			 map.put(TITLE_REF, feed.getTitle());
 			 map.put(LINK_REF, key);
 			 returnedList.add(map);
 		 }
-		
 		 return returnedList;
 	 }
 	 

@@ -34,4 +34,13 @@
         android:text="@string/subscribe_ok_button"
         android:onClick="subscribeButtonClick" />
 
+    <TextView
+        android:id="@+id/subscribe_tv_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/subscribe_url_input"
+        android:textSize="15sp"
+        android:layout_below="@+id/subscribe_ok_button"
+         />
+
 </RelativeLayout>
