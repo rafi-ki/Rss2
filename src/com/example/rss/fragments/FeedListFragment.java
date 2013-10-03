@@ -44,6 +44,13 @@ public class FeedListFragment extends SherlockListFragment {
 		
 		feedmanager= FeedManager.getInstance();
 		receiver = new RefreshFeedListReceiver();
+		
+		//define receiver for refreshing feed list
+		 IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
+		 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
+		 
+		 Intent intent = new Intent(getActivity(), FeedLoaderService.class);
+		 getActivity().startService(intent);
 	}
 		
 	 @Override
@@ -87,13 +94,9 @@ public class FeedListFragment extends SherlockListFragment {
 	 {
 		 super.onResume();
 		 
-		 
 		 //define receiver for refreshing feed list
 		 IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
 		 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
-		 
-		 Intent intent = new Intent(getActivity(), FeedLoaderService.class);
-		 getActivity().startService(intent);
 	 }
 	 
 	 @Override

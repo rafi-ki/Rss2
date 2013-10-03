@@ -160,7 +160,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			FragmentManager fragmentManager = getSupportFragmentManager();
-			System.out.println("In updatefeedlistreceiver");
 			if (action.equals(RssDefines.REFRESH_FEED_LIST))
 			{
 				System.out.println("Received update feed list message");
