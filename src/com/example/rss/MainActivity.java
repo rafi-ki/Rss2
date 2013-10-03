@@ -16,7 +16,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -102,13 +101,11 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	//Button method to subscribe to the feed with the url from the edittextview of the same fragment
 	public void subscribeButtonClick(View v) {
-        System.out.println("button was clicked");
-      //hide keyboard
+		//hide keyboard
 		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(findViewById(R.id.subscribe_url_input).getWindowToken(), 0);
         EditText urlinput = (EditText) findViewById(R.id.subscribe_url_input);
         String feedurlstring = urlinput.getEditableText().toString();
-        System.out.println("Url: "+urlinput.getEditableText());
         
         Fragment f = getSupportFragmentManager().findFragmentById(R.id.main_activity);
 		TextView textView = (TextView) f.getView().findViewById(R.id.subscribe_tv_message);

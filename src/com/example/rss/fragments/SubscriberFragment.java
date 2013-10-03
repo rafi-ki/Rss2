@@ -11,9 +11,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class SubscriberFragment extends SherlockFragment {
 	
@@ -30,6 +33,27 @@ public class SubscriberFragment extends SherlockFragment {
 		});
 
 	}*/
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
+		
+		EditText inputText = (EditText) getActivity().findViewById(R.id.subscribe_url_input);
+		//remove text from message and text if EditText gets clicked
+		inputText.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View view) {
+				TextView message = (TextView) getActivity().findViewById(R.id.subscribe_tv_message);
+				message.setText("");
+			}
+		});
+	}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,8 +62,11 @@ public class SubscriberFragment extends SherlockFragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.subscribe_to_feed_fragment, container, false);
     }
+	
 	@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.removeItem(R.id.action_subscribe);
     }
+	
+	
 }
