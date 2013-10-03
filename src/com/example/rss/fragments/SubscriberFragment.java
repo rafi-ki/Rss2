@@ -66,6 +66,7 @@ public class SubscriberFragment extends SherlockFragment {
 	@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.removeItem(R.id.action_subscribe);
+        menu.removeItem(R.id.action_refresh);
     }
 	
 	

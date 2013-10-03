@@ -11,7 +11,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,11 +22,13 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.example.rss.fragments.DetailList;
 import com.example.rss.fragments.FeedListFragment;
 import com.example.rss.fragments.SubscriberFragment;
 import com.example.rss.persistance.FeedManager;
 import com.example.rss.persistance.RssDefines;
+import com.example.rss.services.FeedLoaderService;
 import com.example.rss.services.ValidateRssService;
 
 public class MainActivity extends SherlockFragmentActivity {
@@ -31,6 +36,8 @@ public class MainActivity extends SherlockFragmentActivity {
 	private FeedManager feedmanager;
 	private FragmentDistributorReceiver distributorReceiver;
 	private UpdateFeedListReceiver updateReceiver;
+	
+	private MenuItem refreshMenuItem;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +89,32 @@ public class MainActivity extends SherlockFragmentActivity {
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) { 
 		MenuInflater i = new MenuInflater(this); 
 		i.inflate(R.menu.main, menu); 
+		refreshMenuItem = menu.findItem(R.id.action_refresh);
+		refreshMenuItem.setOnMenuItemClickListener(new MenuItemListener(this));
 		return super.onCreateOptionsMenu(menu); 
-	} 
+	}
+	
+	private class MenuItemListener implements OnMenuItemClickListener
+	{
+		private Context c;
+		public MenuItemListener(Context c)
+		{
+			this.c = c;
+		}
+		
+		@Override
+		public boolean onMenuItemClick(MenuItem item) {
+			if (item.getItemId() == R.id.action_refresh)
+			{
+				System.out.println("refreshing...");
+				runRefresh();
+				Intent intent = new Intent(c, FeedLoaderService.class);
+				c.startService(intent);
+				return true;
+			}
+			return true;
+		}
+	}
 	
 	@Override 
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -115,6 +146,18 @@ public class MainActivity extends SherlockFragmentActivity {
         validateIntent.putExtra(RssDefines.EXTRA_VALIDATE_RSS_URL, feedurlstring);
         startService(validateIntent);
     }
+	
+	private void stopRefresh()
+	{
+		if (refreshMenuItem != null)
+			refreshMenuItem.setActionView(null);
+	}
+	
+	private void runRefresh()
+	{
+		if (refreshMenuItem != null)
+			refreshMenuItem.setActionView(R.layout.indeterminate_progress_action);
+	}
 	
 	private class FragmentDistributorReceiver extends BroadcastReceiver
 	{
@@ -159,6 +202,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			if (action.equals(RssDefines.REFRESH_FEED_LIST))
 			{
+				stopRefresh(); //stop refresh if necessary
 				System.out.println("Received update feed list message");
 				Fragment fra = fragmentManager.findFragmentById(R.id.main_activity);
 				if (fra instanceof FeedListFragment)
