@@ -5,8 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.rss.R;
@@ -61,5 +67,16 @@ public class DetailList extends SherlockListFragment {
 			 returnedList.add(map);
 		 }
 		 return returnedList;
+	 }
+	 
+	 @Override
+	 public void onListItemClick(ListView lv, View v, int position, long id)
+	 {
+		 RelativeLayout layout = (RelativeLayout) v;
+		 TextView linkview = (TextView) layout.getChildAt(1); // get textview of link
+		 String link = linkview.getText().toString();
+		 Intent intent = new Intent(Intent.ACTION_VIEW);
+		 intent.setData(Uri.parse(link));
+		 startActivity(intent);
 	 }
 }
