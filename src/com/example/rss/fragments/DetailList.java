@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
 
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -38,13 +35,6 @@ public class DetailList extends SherlockListFragment {
 		String link =b.getString(RssDefines.EXTRA_DATA_DETAILS_LINK);
 		setDetailsToListView(link);
 	}
-	
-//	@Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.detail_fragment, container, false);
-//    }
 	
 	public void setDetailsToListView(String url)
 	 {
