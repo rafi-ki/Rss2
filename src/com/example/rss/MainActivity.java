@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -107,7 +108,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			if (item.getItemId() == R.id.action_refresh)
 			{
 				System.out.println("refreshing...");
-				runRefresh();
+				runRefreshAnimation(); // start animation (view)
 				Intent intent = new Intent(c, FeedLoaderService.class);
 				c.startService(intent);
 				return true;
@@ -147,16 +148,35 @@ public class MainActivity extends SherlockFragmentActivity {
         startService(validateIntent);
     }
 	
-	private void stopRefresh()
+	/**
+	 * stop refresh animation
+	 */
+	private void stopRefreshAnimation()
 	{
-		if (refreshMenuItem != null)
-			refreshMenuItem.setActionView(null);
+		if (refreshMenuItem == null || refreshMenuItem.getActionView() == null)
+			return;
+		
+		refreshMenuItem.getActionView().clearAnimation();
+		refreshMenuItem.setActionView(null);
 	}
 	
-	private void runRefresh()
+	/**
+	 * Run refresh animation
+	 */
+	private void runRefreshAnimation()
 	{
-		if (refreshMenuItem != null)
-			refreshMenuItem.setActionView(R.layout.indeterminate_progress_action);
+		if (refreshMenuItem == null)
+			return;
+		
+		LayoutInflater inflater = (LayoutInflater) getApplication()
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_iv, null);
+		 
+		Animation rotation = AnimationUtils.loadAnimation(getApplication(), R.anim.refresh_rotation);
+		rotation.setRepeatCount(Animation.INFINITE);
+		iv.startAnimation(rotation);
+		 
+		refreshMenuItem.setActionView(iv);
 	}
 	
 	private class FragmentDistributorReceiver extends BroadcastReceiver
@@ -202,7 +222,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			if (action.equals(RssDefines.REFRESH_FEED_LIST))
 			{
-				stopRefresh(); //stop refresh if necessary
+				stopRefreshAnimation(); //stop refresh if necessary
 				System.out.println("Received update feed list message");
 				Fragment fra = fragmentManager.findFragmentById(R.id.main_activity);
 				if (fra instanceof FeedListFragment)
