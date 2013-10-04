@@ -23,6 +23,7 @@
         android:inputType="textUri">
 
         <requestFocus />
+
     </EditText>
 
     <Button
@@ -42,5 +43,10 @@
         android:textSize="15sp"
         android:layout_below="@+id/subscribe_ok_button"
          />
+
+    <ProgressBar
+        android:id="@+id/subscribe_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

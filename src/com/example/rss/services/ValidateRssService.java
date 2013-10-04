@@ -17,6 +17,7 @@ public class ValidateRssService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		
 		String url = intent.getStringExtra(RssDefines.EXTRA_VALIDATE_RSS_URL); // the url to be validate
 		System.out.println("started valdiate-service with url: " + url);
 		FeedManager feedmanager = FeedManager.getInstance();

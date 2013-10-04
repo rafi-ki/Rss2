@@ -18,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -257,6 +258,9 @@ public class MainActivity extends SherlockFragmentActivity {
 					textView.setTextColor(Color.RED);
 					textView.setText("wrong url, please enter a valid one");
 				}
+				
+				ProgressBar progbar = (ProgressBar) findViewById(R.id.subscribe_loading);
+		        progbar.setVisibility(View.INVISIBLE);
 			}
 		}
 	}
@@ -277,6 +281,9 @@ public class MainActivity extends SherlockFragmentActivity {
 				
 				Intent validateIntent = new Intent(context, ValidateRssService.class);
 		        validateIntent.putExtra(RssDefines.EXTRA_VALIDATE_RSS_URL, feedurlstring);
+		      
+		        ProgressBar progbar = (ProgressBar) findViewById(R.id.subscribe_loading);
+		        progbar.setVisibility(View.VISIBLE);
 		        startService(validateIntent);
 			}
 		}

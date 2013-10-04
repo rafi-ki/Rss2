@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class SubscriberFragment extends SherlockFragment {
@@ -30,6 +31,10 @@ public class SubscriberFragment extends SherlockFragment {
 		
 		//get up button in action bar for this fragment
 		 getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		//hide loading animation 
+		 ProgressBar progbar = (ProgressBar) getView().findViewById(R.id.subscribe_loading);
+	     progbar.setVisibility(View.INVISIBLE);
 		
 		Button button = (Button) getView().findViewById(R.id.subscribe_ok_button);
 		button.setOnClickListener(new View.OnClickListener() {
