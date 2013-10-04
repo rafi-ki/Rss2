@@ -42,6 +42,7 @@ public class FeedListFragment extends SherlockListFragment {
 		super.onCreate(savedInstanceState);
 		System.out.println("FeedList-Fragment created");
 		
+		
 		feedmanager= FeedManager.getInstance();
 		receiver = new RefreshFeedListReceiver();
 		
@@ -93,6 +94,9 @@ public class FeedListFragment extends SherlockListFragment {
 	 public void onResume()
 	 {
 		 super.onResume();
+		 
+		//disable up button in action bar for this fragment 
+			getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		 
 		 //define receiver for refreshing feed list
 		 IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);

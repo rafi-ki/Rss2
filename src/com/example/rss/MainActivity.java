@@ -134,7 +134,12 @@ public class MainActivity extends SherlockFragmentActivity {
         	transaction.addToBackStack(null);
         	transaction.replace(R.id.main_activity, new SubscriberFragment());
         	transaction.commit();
-        }
+        }	
+        if(item.getItemId()==android.R.id.home){
+	    	System.out.println("up button pressed");
+	    	FragmentManager fragmentManager = getSupportFragmentManager();
+	    	fragmentManager.popBackStack();
+		}
         return super.onOptionsItemSelected(item);
 	}
 

@@ -8,6 +8,7 @@ import java.util.Map;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -15,6 +16,9 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.example.rss.R;
 import com.example.rss.model.FeedItem;
 import com.example.rss.model.RssFeed;
@@ -31,6 +35,9 @@ public class DetailList extends SherlockListFragment {
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		
+		//get up button in action bar for this fragment
+		 getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true); 
 	}
 	
 	@Override
@@ -79,4 +86,6 @@ public class DetailList extends SherlockListFragment {
 		 intent.setData(Uri.parse(link));
 		 startActivity(intent);
 	 }
+	 
+	 
 }

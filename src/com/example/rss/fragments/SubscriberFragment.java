@@ -11,6 +11,7 @@ import com.example.rss.persistance.RssDefines;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,10 @@ public class SubscriberFragment extends SherlockFragment {
 	@Override
 	public void onStart(){
 		super.onStart();
+		
+		//get up button in action bar for this fragment
+		 getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		Button button = (Button) getView().findViewById(R.id.subscribe_ok_button);
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
