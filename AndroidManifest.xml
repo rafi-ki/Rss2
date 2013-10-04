@@ -19,7 +19,8 @@
         <service android:name="com.example.rss.services.ValidateRssService" />
         <activity
             android:name="com.example.rss.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
