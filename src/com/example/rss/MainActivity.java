@@ -36,6 +36,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	private FeedManager feedmanager;
 	private FragmentDistributorReceiver distributorReceiver;
 	private UpdateFeedListReceiver updateReceiver;
+	private AddFeedReceiver addFeedReceiver;
 	
 	private MenuItem refreshMenuItem;
 	
@@ -47,6 +48,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		getSupportActionBar();
 		distributorReceiver = new FragmentDistributorReceiver();
 		updateReceiver = new UpdateFeedListReceiver();
+		addFeedReceiver = new AddFeedReceiver();
 		
 		feedmanager = FeedManager.getInstance(); //gets instance of the feedmanager (singelton)
 		feedmanager.restoreSubscribedFeeds(this);
@@ -71,6 +73,10 @@ public class MainActivity extends SherlockFragmentActivity {
 		filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
 		filter.addAction(RssDefines.VALIDATE_RSS);
 		LocalBroadcastManager.getInstance(this).registerReceiver(updateReceiver, filter);
+		
+		filter = new IntentFilter(RssDefines.ADD_RSS_FEED);
+		filter.addAction(RssDefines.ADD_RSS_FEED);
+		LocalBroadcastManager.getInstance(this).registerReceiver(addFeedReceiver, filter);
 	}
 	
 	@Override
@@ -83,6 +89,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		// unregister receiver
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(distributorReceiver); 
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(updateReceiver);
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(addFeedReceiver);
 	}
 
 	@Override 
@@ -130,7 +137,7 @@ public class MainActivity extends SherlockFragmentActivity {
         return super.onOptionsItemSelected(item);
 	}
 
-	//Button method to subscribe to the feed with the url from the edittextview of the same fragment
+/*	//Button method to subscribe to the feed with the url from the edittextview of the same fragment
 	public void subscribeButtonClick(View v) {
 		//hide keyboard
 		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -145,7 +152,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		Intent validateIntent = new Intent(this, ValidateRssService.class);
         validateIntent.putExtra(RssDefines.EXTRA_VALIDATE_RSS_URL, feedurlstring);
         startService(validateIntent);
-    }
+    } */
 	
 	private void stopRefresh()
 	{
@@ -227,5 +234,27 @@ public class MainActivity extends SherlockFragmentActivity {
 				}
 			}
 		}
+	}
+	
+	private class AddFeedReceiver extends BroadcastReceiver{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			
+			String action = intent.getAction();
+			System.out.println("ADD RSS FEED received");
+			if(action.equals(RssDefines.ADD_RSS_FEED)){
+				Fragment f = getSupportFragmentManager().findFragmentById(R.id.main_activity);
+				TextView textView = (TextView) f.getView().findViewById(R.id.subscribe_tv_message);
+				textView.setText("validating! please wait ...");
+				
+				String feedurlstring = intent.getStringExtra("urlstring");
+				
+				Intent validateIntent = new Intent(context, ValidateRssService.class);
+		        validateIntent.putExtra(RssDefines.EXTRA_VALIDATE_RSS_URL, feedurlstring);
+		        startService(validateIntent);
+			}
+		}
+		
 	}
 }

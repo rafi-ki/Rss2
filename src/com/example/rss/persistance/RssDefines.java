@@ -12,4 +12,6 @@ public class RssDefines {
 	public static final String EXTRA_VALIDATE_RSS_URL = "validate_rss_url";
 	public static final String VALIDATE_RSS = "validate_rss";
 	
+	public static final String ADD_RSS_FEED = "add_rss_feed";
+	
 }

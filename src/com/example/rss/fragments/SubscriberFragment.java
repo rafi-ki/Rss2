@@ -6,9 +6,12 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.example.rss.R;
+import com.example.rss.persistance.RssDefines;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +23,7 @@ import android.widget.TextView;
 
 public class SubscriberFragment extends SherlockFragment {
 	
-/*	@Override
+	@Override
 	public void onStart(){
 		super.onStart();
 		Button button = (Button) getView().findViewById(R.id.subscribe_ok_button);
@@ -29,10 +32,18 @@ public class SubscriberFragment extends SherlockFragment {
 				//hide keyboard
 				InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(getView().findViewById(R.id.subscribe_url_input).getWindowToken(), 0);
+				
+				EditText edtxt=(EditText) getView().findViewById(R.id.subscribe_url_input);
+				String urlstring = edtxt.getEditableText().toString();
+				Intent in = new Intent(RssDefines.ADD_RSS_FEED);
+				in.putExtra("urlstring", urlstring);
+				System.out.println("ADD RSS FEED build");
+				LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(in);
+				System.out.println("ADD RSS FEED sent");
 			}
 		});
 
-	}*/
+	}
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
