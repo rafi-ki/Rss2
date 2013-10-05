@@ -11,11 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -52,6 +48,10 @@ public class MainActivity extends SherlockFragmentActivity {
 		
 		feedmanager = FeedManager.getInstance(); //gets instance of the feedmanager (singelton)
 		feedmanager.restoreSubscribedFeeds(this);
+		
+		//update all feeds onCreate
+		runRefreshAnimation();
+		updateAllFeeds();
 		
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -94,33 +94,29 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	@Override 
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) { 
-		MenuInflater i = new MenuInflater(this); 
+		MenuInflater i = getSupportMenuInflater();
 		i.inflate(R.menu.main, menu); 
 		refreshMenuItem = menu.findItem(R.id.action_refresh);
-		refreshMenuItem.setOnMenuItemClickListener(new MenuItemListener(this));
+		refreshMenuItem.setOnMenuItemClickListener(new OnMenuItemClickListener(){
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				if (item.getItemId() == R.id.action_refresh)
+				{
+					System.out.println("refreshing...");
+					runRefreshAnimation(); // start animation
+					updateAllFeeds();
+					return true;
+				}
+				return true;
+			}
+		});
 		return super.onCreateOptionsMenu(menu); 
 	}
 	
-	private class MenuItemListener implements OnMenuItemClickListener
+	private void updateAllFeeds()
 	{
-		private Context c;
-		public MenuItemListener(Context c)
-		{
-			this.c = c;
-		}
-		
-		@Override
-		public boolean onMenuItemClick(MenuItem item) {
-			if (item.getItemId() == R.id.action_refresh)
-			{
-				System.out.println("refreshing...");
-				runRefreshAnimation(); // start animation (view)
-				Intent intent = new Intent(c, FeedLoaderService.class);
-				c.startService(intent);
-				return true;
-			}
-			return true;
-		}
+		Intent intent = new Intent(this, FeedLoaderService.class);
+		startService(intent);
 	}
 	
 	@Override 
@@ -164,10 +160,9 @@ public class MainActivity extends SherlockFragmentActivity {
 	 */
 	private void stopRefreshAnimation()
 	{
-		if (refreshMenuItem == null || refreshMenuItem.getActionView() == null)
+		if (refreshMenuItem == null)
 			return;
 		
-		refreshMenuItem.getActionView().clearAnimation();
 		refreshMenuItem.setActionView(null);
 	}
 	
@@ -179,15 +174,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		if (refreshMenuItem == null)
 			return;
 		
-		LayoutInflater inflater = (LayoutInflater) getApplication()
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		ImageView iv = (ImageView) inflater.inflate(R.layout.refresh_iv, null);
-		 
-		Animation rotation = AnimationUtils.loadAnimation(getApplication(), R.anim.refresh_rotation);
-		rotation.setRepeatCount(Animation.INFINITE);
-		iv.startAnimation(rotation);
-		 
-		refreshMenuItem.setActionView(iv);
+		refreshMenuItem.setActionView(R.layout.refresh_progress_bar);
 	}
 	
 	private class FragmentDistributorReceiver extends BroadcastReceiver
