@@ -9,17 +9,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.rss.R;
@@ -52,12 +57,47 @@ public class FeedListFragment extends SherlockListFragment {
 		 
 		 Intent intent = new Intent(getActivity(), FeedLoaderService.class);
 		 getActivity().startService(intent);
+		 
 	}
 		
 	 @Override
 	 public void onActivityCreated(Bundle savedInstanceState) 
 	 {
 		 super.onActivityCreated(savedInstanceState);
+		 
+		 getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+
+
+				@Override
+				public boolean onItemLongClick(AdapterView<?> adapterview, View view,
+						int position, long id) {
+					
+					// Toast.makeText(getActivity(), "Long press!", Toast.LENGTH_SHORT).show();
+					RelativeLayout layout = (RelativeLayout) view;
+					 TextView linkview = (TextView) layout.getChildAt(1); // get textview of link
+					 final String itemlink = linkview.getText().toString();
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+					builder.setMessage(R.string.list_item_delet_confirm_message).setTitle(R.string.list_item_delet_confirm_title);
+					builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				        	   feedmanager.delFeed(itemlink);
+				        	   
+				        	   Intent in = new Intent(RssDefines.REFRESH_FEED_LIST);
+				        	   LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(in);
+				           }
+				       });
+					builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+				           public void onClick(DialogInterface dialog, int id) {
+				               // User cancelled the dialog so do nothing
+				           }
+				       });
+
+					AlertDialog dialog = builder.create();
+					dialog.show();
+					return true;
+				}
+		    });
 		 
 		 setFeedMapToListView();
 	 }
