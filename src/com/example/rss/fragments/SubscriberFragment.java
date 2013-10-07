@@ -9,6 +9,7 @@ import com.example.rss.persistance.RssDefines;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
@@ -70,6 +71,7 @@ public class SubscriberFragment extends SherlockFragment {
 			public void onClick(View view) {
 				TextView message = (TextView) getActivity().findViewById(R.id.subscribe_tv_message);
 				message.setText("");
+				message.setTextColor(Color.BLACK);
 			}
 		});
 	}
