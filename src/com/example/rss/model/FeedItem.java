@@ -10,14 +10,14 @@ public class FeedItem implements Serializable
 {
 	private static final long serialVersionUID = 1709487133434245708L;
 	
-	private int id;
-	private boolean read_state;
-	private boolean starred_state;
+	private long id;
+	private long rssFeedId;
 	private String title;
     private String description;
     private String link;
-    private String feedId;
     private String author;
+    private boolean starred;
+    private boolean read;
 
     public FeedItem()
     {
@@ -29,7 +29,6 @@ public class FeedItem implements Serializable
         this.title = title;
         this.description = description;
         this.link = link;
-        this.feedId = feedId;
         this.author = author;
     }
 
@@ -57,14 +56,6 @@ public class FeedItem implements Serializable
         this.link = link;
     }
 
-    public String getFeedId() {
-        return feedId;
-    }
-
-    public void setFeedId(String feedId) {
-        this.feedId = feedId;
-    }
-
     public String getAuthor() {
         return author;
     }
@@ -78,30 +69,38 @@ public class FeedItem implements Serializable
     {
         return "FeedItem: [Title:" + this.title + ", Author:" + this.author
                 + ", Description:" + this.description + ", Link:" + this.link
-                + ", FeedId:" + this.feedId + "]";
+                + "]";
     }
     
-    public int getId() {
+    public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public boolean isRead_state() {
-		return read_state;
+	public long getRssFeedId() {
+		return rssFeedId;
 	}
 
-	public void setRead_state(boolean read_state) {
-		this.read_state = read_state;
+	public void setRssFeedId(long rssFeedId) {
+		this.rssFeedId = rssFeedId;
 	}
 
-	public boolean isStarred_state() {
-		return starred_state;
+	public boolean isStarred() {
+		return starred;
 	}
 
-	public void setStarred_state(boolean starred_state) {
-		this.starred_state = starred_state;
+	public void setStarred(boolean starred) {
+		this.starred = starred;
+	}
+
+	public boolean isRead() {
+		return read;
+	}
+
+	public void setRead(boolean read) {
+		this.read = read;
 	}
 }

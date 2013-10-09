@@ -59,7 +59,6 @@ public class CustomRssReader {
 				item.setAuthor(getElementValue(element, "author"));
 				item.setLink(getElementValue(element, "link"));
 				item.setDescription(getElementValue(element, "description"));
-				item.setFeedId(getElementValue(element, "guid"));
 				
 				feed.addFeedItem(item);
 			}

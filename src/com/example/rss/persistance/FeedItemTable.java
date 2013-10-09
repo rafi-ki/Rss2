@@ -14,7 +14,6 @@ public class FeedItemTable {
 	public static final String COLUMN_LINK = "link";
 	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_RSSFEED_ID = "rssfeed_id";
-	public static final String COLUMN_FEED_ID = "feedId";
 	public static final String COLUMN_AUTHOR = "author";
 	public static final String COLUMN_READ_STATE = "read_state";
 	public static final String COLUMN_STARRED_STATE = "starred_state";
@@ -23,21 +22,21 @@ public class FeedItemTable {
 		COLUMN_ID, COLUMN_RSSFEED_ID,
 		COLUMN_TITLE, COLUMN_AUTHOR,
 		COLUMN_LINK, COLUMN_DESCRIPTION,
-		COLUMN_FEED_ID, COLUMN_READ_STATE,
-		COLUMN_STARRED_STATE
+		COLUMN_READ_STATE, COLUMN_STARRED_STATE
 	};
 	
 	// create script of the table
-	private static final String CREATE_FEEDITEM = "CREATE TABLE"
+	private static final String CREATE_FEEDITEM = "CREATE TABLE "
 			+ TABLE_FEED_ITEM + "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-			+ COLUMN_FEED_ID + " TEXT, "
 			+ COLUMN_TITLE + " TEXT, "
 			+ COLUMN_LINK + " TEXT, "
 			+ COLUMN_DESCRIPTION + " TEXT, "
 			+ COLUMN_RSSFEED_ID + " INTEGER, "
 			+ COLUMN_AUTHOR + " TEXT, "
 			+ COLUMN_READ_STATE + " INTEGER, "
-			+ COLUMN_STARRED_STATE + " INTEGER)";
+			+ COLUMN_STARRED_STATE + " INTEGER, " 
+			+ "FOREIGN KEY (" + COLUMN_RSSFEED_ID + ") "
+				+ "REFERENCES " + RssFeedTable.TABLE_RSSFEED + "(" + RssFeedTable.COLUMN_ID + "));";
 	
 	public static void onCreate(SQLiteDatabase database)
 	{

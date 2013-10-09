@@ -25,12 +25,12 @@ public class RssFeedTable {
 	
 
 	// create script for table
-	private static final String CREATE_RSSFEED = "CREATE TABLE"
+	private static final String CREATE_RSSFEED = "CREATE TABLE "
 			+ TABLE_RSSFEED + "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
 			+ COLUMN_TITLE + " TEXT, " 
 			+ COLUMN_LINK + " TEXT, "
 			+ COLUMN_DESCRIPTION + " TEXT, " 
-			+ COLUMN_DATE + " TEXT)";
+			+ COLUMN_DATE + " TEXT);";
 	
 	public static void onCreate(SQLiteDatabase database)
 	{

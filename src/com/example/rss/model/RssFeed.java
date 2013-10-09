@@ -12,7 +12,7 @@ public class RssFeed implements Serializable
 {
 	private static final long serialVersionUID = 2700137136490411934L;
 	
-	private int id;
+	private long id;
 	private String title;
     private String link;
     private String description;
@@ -87,11 +87,11 @@ public class RssFeed implements Serializable
     	return builder.toString();
     }
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 }

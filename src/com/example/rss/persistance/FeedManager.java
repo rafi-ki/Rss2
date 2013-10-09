@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.content.ContentResolver;
 import android.content.Context;
 
 import com.example.rss.model.RssFeed;
