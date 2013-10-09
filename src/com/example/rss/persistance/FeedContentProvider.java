@@ -4,12 +4,14 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.text.TextUtils;
 
 public class FeedContentProvider extends ContentProvider{
 
@@ -76,32 +78,81 @@ public class FeedContentProvider extends ContentProvider{
 	
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
+		int uriType = uriMatcher.match(uri);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		
 		String tableName = "";
-		String path = "";
-		if (uriMatcher.match(uri) == RSSFEEDS)
+		Uri contentUri = null;
+		switch(uriType)
 		{
+		case RSSFEEDS:
 			tableName = RssFeedTable.TABLE_RSSFEED;
-			path = BASE_PATH_RSS;
-		}
-		else if (uriMatcher.match(uri) == FEED_ITEMS)
-		{
+			contentUri = CONTENT_URI_RSS;
+			break;
+		case FEED_ITEMS:
 			tableName = FeedItemTable.TABLE_FEED_ITEM;
-			path = BASE_PATH_FEED_ITEM;
+			contentUri = CONTENT_URI_FEED_ITEM;
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
 		
+		// insert add get id
 		long id = db.insertWithOnConflict(tableName, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-		getContext().getContentResolver().notifyChange(uri, null);
+		
+		Uri _uri = ContentUris.withAppendedId(contentUri, id);
+		
+		// notify observer
+		getContext().getContentResolver().notifyChange(_uri, null);
 		
 		db.close();
-		return Uri.parse(path + "/" + id);
+		return _uri;
 	}
 	
 	@Override
-	public int delete(Uri arg0, String arg1, String[] arg2) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int delete(Uri uri, String where, String[] whereArgs) {
+		int uriType = uriMatcher.match(uri);
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		String tableName = "";
+		String id_column = "";
+		Uri contentUri = null;
+		int rowsDeleted = 0;
+		
+		// selecting tablename and column id
+		switch(uriType)
+		{
+		case RSSFEEDS:
+		case RSSFEED_ID:
+			tableName = RssFeedTable.TABLE_RSSFEED;
+			id_column = RssFeedTable.COLUMN_ID;
+			contentUri = CONTENT_URI_RSS;
+			break;
+		case FEED_ITEMS:
+		case FEED_ITEM_ID:
+			tableName = FeedItemTable.TABLE_FEED_ITEM;
+			id_column = FeedItemTable.COLUMN_ID;
+			contentUri = CONTENT_URI_FEED_ITEM;
+			break;
+		default:
+			 throw new IllegalArgumentException("Unknown URI: " + uri);
+		}
+		
+		
+		// check to delete per id or with where clause
+		if (uriType == RSSFEEDS || uriType == FEED_ITEMS)
+			rowsDeleted = db.delete(tableName, where, whereArgs);
+		else
+		{
+			String id = uri.getLastPathSegment();
+			if (TextUtils.isEmpty(where))
+				rowsDeleted = db.delete(tableName, id_column + "=" + id, null);
+			else
+				rowsDeleted = db.delete(tableName,  id_column + "=" + id + " AND " + where, whereArgs);
+		}
+		
+		getContext().getContentResolver().notifyChange(contentUri, null);
+		db.close();
+		return rowsDeleted;
 	}
 
 	@Override
