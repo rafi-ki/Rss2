@@ -6,50 +6,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class FeedDatabaseHelper extends SQLiteOpenHelper{
 	
-	private static final String LOG = "feeds_database_helper";
-	
+	//Database Information
 	private static final String DATABASE_NAME = "feeds";
 	private static final int DATABASE_VERSION = 1;
-	
-	//Table Names
-	private static final String TABLE_RSSFEED = "rssfeed";
-	private static final String TABLE_FEEDITEM = "feeditem";
-	
-	//common column names
-	private static final String KEY_ID = "id";
-	private static final String COL_TITLE = "title";
-	private static final String COL_LINK = "link";
-	private static final String COL_DESCRIPTION = "description";
-	
-	//RssFeed Table
-	private static final String COL_DATE = "date";
-	
-	//FeedItem Table
-	private static final String COL_RSSFEED_ID = "rssfeed_id";
-	private static final String COL_FEED_ID = "feedId";
-	private static final String COL_AUTHOR = "author";
-	private static final String COL_READ_STATE = "read_state";
-	private static final String COL_STARRED_STATE = "starred_state";
-	
-	
-	//Creating Statements of the Tables
-	private static final String CREATE_RSSFEED = "CREATE TABLE"
-			+ TABLE_RSSFEED + "(" + KEY_ID + " INTEGER PRIMARY KEY," 
-			+ COL_TITLE + " TEXT, " 
-			+ COL_LINK + " TEXT, "
-			+ COL_DESCRIPTION + " TEXT, " 
-			+ COL_DATE + " TEXT)";
-	
-	private static final String CREATE_FEEDITEM = "CREATE TABLE"
-			+ TABLE_FEEDITEM + "(" + KEY_ID + " INTEGER PRIMARY KEY,"
-			+ COL_FEED_ID + " TEXT, "
-			+ COL_TITLE + " TEXT, "
-			+ COL_LINK + " TEXT, "
-			+ COL_DESCRIPTION + " TEXT, "
-			+ COL_RSSFEED_ID + " INTEGER, "
-			+ COL_AUTHOR + " TEXT, "
-			+ COL_READ_STATE + " INTEGER, "
-			+ COL_STARRED_STATE + " INTEGER)";
 	
 	public FeedDatabaseHelper(Context context)
 	{
@@ -59,17 +18,15 @@ public class FeedDatabaseHelper extends SQLiteOpenHelper{
 	@Override
 	public void onCreate(SQLiteDatabase db)
 	{
-		db.execSQL(CREATE_RSSFEED);
-		db.execSQL(CREATE_FEEDITEM);
+		RssFeedTable.onCreate(db);
+		FeedItemTable.onCreate(db);
 	}
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
 	{
-		db.execSQL("DROP TABLE IF EXISTS " + TABLE_FEEDITEM);
-		db.execSQL("DROP TABLE IF EXIStS " + TABLE_RSSFEED);
-		
-		onCreate(db);
+		FeedItemTable.onUpgrade(db, oldVersion, newVersion);
+		RssFeedTable.onUpgrade(db, oldVersion, newVersion);
 	}
 	
 	public void closeDB()
