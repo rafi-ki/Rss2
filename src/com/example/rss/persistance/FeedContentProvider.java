@@ -110,7 +110,7 @@ public class FeedContentProvider extends ContentProvider{
 	}
 	
 	@Override
-	public int delete(Uri uri, String where, String[] whereArgs) {
+	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		int uriType = uriMatcher.match(uri);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		String tableName = "";
@@ -140,14 +140,14 @@ public class FeedContentProvider extends ContentProvider{
 		
 		// check to delete per id or with where clause
 		if (uriType == RSSFEEDS || uriType == FEED_ITEMS)
-			rowsDeleted = db.delete(tableName, where, whereArgs);
+			rowsDeleted = db.delete(tableName, selection, selectionArgs);
 		else
 		{
 			String id = uri.getLastPathSegment();
-			if (TextUtils.isEmpty(where))
+			if (TextUtils.isEmpty(selection))
 				rowsDeleted = db.delete(tableName, id_column + "=" + id, null);
 			else
-				rowsDeleted = db.delete(tableName,  id_column + "=" + id + " AND " + where, whereArgs);
+				rowsDeleted = db.delete(tableName,  id_column + "=" + id + " AND " + selection, selectionArgs);
 		}
 		
 		getContext().getContentResolver().notifyChange(contentUri, null);
@@ -156,14 +156,50 @@ public class FeedContentProvider extends ContentProvider{
 	}
 
 	@Override
-	public String getType(Uri uri) {
-		return null; // is not needed yet
-	}
-
-	@Override
-	public int update(Uri arg0, ContentValues arg1, String arg2, String[] arg3) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+		int uriType = uriMatcher.match(uri);
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		int rowsUpdated = 0;
+		
+		String tableName = "";
+		String id_column = "";
+		Uri contentUri = null;
+		
+		// selecting tablename and column id
+		switch(uriType)
+		{
+		case RSSFEEDS:
+		case RSSFEED_ID:
+			tableName = RssFeedTable.TABLE_RSSFEED;
+			id_column = RssFeedTable.COLUMN_ID;
+			contentUri = CONTENT_URI_RSS;
+			break;
+		case FEED_ITEMS:
+		case FEED_ITEM_ID:
+			tableName = FeedItemTable.TABLE_FEED_ITEM;
+			id_column = FeedItemTable.COLUMN_ID;
+			contentUri = CONTENT_URI_FEED_ITEM;
+			break;
+		default:
+			 throw new IllegalArgumentException("Unknown URI: " + uri);
+		}
+		
+		
+		// check to delete per id or with where clause
+		if (uriType == RSSFEEDS || uriType == FEED_ITEMS)
+			rowsUpdated = db.update(tableName, values, selection, selectionArgs);
+		else
+		{
+			String id = uri.getLastPathSegment();
+			if (TextUtils.isEmpty(selection))
+				rowsUpdated = db.update(tableName, values, id_column + "=" + id, null);
+			else
+				rowsUpdated = db.update(tableName, values, id_column + "=" + id + " AND " + selection, selectionArgs);
+		}
+		
+		getContext().getContentResolver().notifyChange(contentUri, null);
+		db.close();
+		return rowsUpdated;
 	}
 	
 	/**
@@ -182,4 +218,8 @@ public class FeedContentProvider extends ContentProvider{
 			throw new IllegalArgumentException("Unknown columns in projection");
 	}
 
+	@Override
+	public String getType(Uri uri) {
+		return null; // is not needed yet
+	}
 }

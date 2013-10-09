@@ -17,6 +17,10 @@
         android:theme="@style/Theme.Hulkbar" >
         <service android:name="com.example.rss.services.FeedLoaderService" />
         <service android:name="com.example.rss.services.ValidateRssService" />
+        
+        <provider android:name="com.example.rss.persistance.FeedContentProvider"
+            android:authorities="com.example.rss.persistance.feedcontentprovider"
+            />
         <activity
             android:name="com.example.rss.MainActivity"
             android:label="@string/app_name"
