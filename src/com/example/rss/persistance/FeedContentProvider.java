@@ -17,7 +17,7 @@ public class FeedContentProvider extends ContentProvider{
 
 	private SQLiteOpenHelper dbHelper;
 	
-	private static final String AUTHORITY = "com.example.rss.persistance";
+	private static final String AUTHORITY = "com.example.rss.persistance.feedcontentprovider";
 	
 	//TODO check what this is all about
 	private static final int RSSFEEDS = 10;
