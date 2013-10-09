@@ -1,9 +1,13 @@
 package com.example.rss.persistance;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 
@@ -46,34 +50,85 @@ public class FeedContentProvider extends ContentProvider{
 	}
 	
 	@Override
+	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+			String sortOrder) {
+		
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		String [] validColumns = null;
+		String tableName = "";
+		
+		// which table will be used ...
+		if (uriMatcher.match(uri) == RSSFEEDS)
+		{
+			validColumns = RssFeedTable.ALL_COLUMNS;
+			tableName = RssFeedTable.TABLE_RSSFEED;
+		}
+		else if (uriMatcher.match(uri) == FEED_ITEMS)
+		{
+			validColumns = FeedItemTable.ALL_COLUMNS;
+			tableName = FeedItemTable.TABLE_FEED_ITEM;
+		}
+		
+		checkColumns(projection, validColumns);
+		
+		return db.query(tableName, projection, selection, selectionArgs, null, null, sortOrder);
+	}
+	
+	@Override
+	public Uri insert(Uri uri, ContentValues values) {
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		
+		String tableName = "";
+		String path = "";
+		if (uriMatcher.match(uri) == RSSFEEDS)
+		{
+			tableName = RssFeedTable.TABLE_RSSFEED;
+			path = BASE_PATH_RSS;
+		}
+		else if (uriMatcher.match(uri) == FEED_ITEMS)
+		{
+			tableName = FeedItemTable.TABLE_FEED_ITEM;
+			path = BASE_PATH_FEED_ITEM;
+		}
+		
+		long id = db.insertWithOnConflict(tableName, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+		getContext().getContentResolver().notifyChange(uri, null);
+		
+		db.close();
+		return Uri.parse(path + "/" + id);
+	}
+	
+	@Override
 	public int delete(Uri arg0, String arg1, String[] arg2) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public String getType(Uri arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Uri insert(Uri arg0, ContentValues arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Cursor query(Uri arg0, String[] arg1, String arg2, String[] arg3,
-			String arg4) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getType(Uri uri) {
+		return null; // is not needed yet
 	}
 
 	@Override
 	public int update(Uri arg0, ContentValues arg1, String arg2, String[] arg3) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	/**
+	 * checks if the columns are valid
+	 * @param columns the columns to check
+	 * @param available the columns available
+	 */
+	private void checkColumns(String [] columns, String [] available)
+	{
+		if (columns == null && available == null)
+			return;
+		
+		HashSet<String> requstedColumns = new HashSet<String>(Arrays.asList(columns));
+		HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));
+		if (!availableColumns.containsAll(requstedColumns))
+			throw new IllegalArgumentException("Unknown columns in projection");
 	}
 
 }

@@ -6,7 +6,7 @@ import android.util.Log;
 public class RssFeedTable {
 	
 	// table name
-	private static final String TABLE_RSSFEED = "rssfeed";
+	public static final String TABLE_RSSFEED = "rssfeed";
 	
 	// table columns
 	public static final String COLUMN_ID = "id";
@@ -14,6 +14,14 @@ public class RssFeedTable {
 	public static final String COLUMN_LINK = "link";
 	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_DATE = "date";
+	
+	public static final String [] ALL_COLUMNS = {
+		COLUMN_ID, 
+		COLUMN_TITLE,
+		COLUMN_LINK,
+		COLUMN_DESCRIPTION,
+		COLUMN_DATE
+	};
 	
 
 	// create script for table

@@ -19,6 +19,14 @@ public class FeedItemTable {
 	public static final String COLUMN_READ_STATE = "read_state";
 	public static final String COLUMN_STARRED_STATE = "starred_state";
 	
+	public static final String [] ALL_COLUMNS = {
+		COLUMN_ID, COLUMN_RSSFEED_ID,
+		COLUMN_TITLE, COLUMN_AUTHOR,
+		COLUMN_LINK, COLUMN_DESCRIPTION,
+		COLUMN_FEED_ID, COLUMN_READ_STATE,
+		COLUMN_STARRED_STATE
+	};
+	
 	// create script of the table
 	private static final String CREATE_FEEDITEM = "CREATE TABLE"
 			+ TABLE_FEED_ITEM + "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
