@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class FeedDatabaseHelper extends SQLiteOpenHelper{
 	
 	//Database Information
-	private static final String DATABASE_NAME = "feeds";
+	private static final String DATABASE_NAME = "feeds.db";
 	private static final int DATABASE_VERSION = 1;
 	
 	public FeedDatabaseHelper(Context context)

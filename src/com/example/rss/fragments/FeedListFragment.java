@@ -17,12 +17,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 
@@ -31,6 +31,7 @@ import com.example.rss.R;
 import com.example.rss.model.RssFeed;
 import com.example.rss.persistance.FeedManager;
 import com.example.rss.persistance.RssDefines;
+import com.example.rss.persistance.RssFeedTable;
 import com.example.rss.services.FeedLoaderService;
 
 public class FeedListFragment extends SherlockListFragment {
@@ -104,11 +105,19 @@ public class FeedListFragment extends SherlockListFragment {
 	 
 	 public void setFeedMapToListView()
 	 {
-		 List<Map<String, String>> items = getFeedData();
-		 SimpleAdapter adapter = new SimpleAdapter(getActivity(), items,
-				 	R.layout.subscribed_lv_item, new String[] { TITLE_REF, LINK_REF },
-				 	new int[] { R.id.subscribed_lv_item_title, R.id.subscribed_lv_item_link }
-		 );
+		//TODO old
+//		 List<Map<String, String>> items = getFeedData();
+		 
+//		 SimpleAdapter adapter = new SimpleAdapter(getActivity(), items,
+//				 	R.layout.subscribed_lv_item, new String[] { TITLE_REF, LINK_REF },
+//				 	new int[] { R.id.subscribed_lv_item_title, R.id.subscribed_lv_item_link }
+//		 );
+		 
+		 //TODO new
+		 String[] from = {RssFeedTable.COLUMN_TITLE, RssFeedTable.COLUMN_LINK};
+		 int[] to = {R.id.subscribed_lv_item_title, R.id.subscribed_lv_item_link};
+		 SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.subscribed_lv_item, null, from, to, 0); 
+		
 		 setListAdapter(adapter);
 	 }
 	 

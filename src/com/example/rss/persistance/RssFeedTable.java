@@ -9,7 +9,7 @@ public class RssFeedTable {
 	public static final String TABLE_RSSFEED = "rssfeed";
 	
 	// table columns
-	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_TITLE = "title";
 	public static final String COLUMN_LINK = "link";
 	public static final String COLUMN_DESCRIPTION = "description";

@@ -6,6 +6,7 @@ import com.example.rss.model.RssFeed;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 
 public class FeedDatabase {
@@ -78,6 +79,25 @@ public class FeedDatabase {
 		values.put(FeedItemTable.COLUMN_STARRED_STATE, toInteger(item.isStarred()));
 		
 		return cr.insert(FeedContentProvider.CONTENT_URI_FEED_ITEM, values);
+	}
+	
+	public static RssFeed getRssFeedById(Context c, long id)
+	{
+		ContentResolver cr = c.getContentResolver();
+		Cursor cursor = cr.query(FeedContentProvider.CONTENT_URI_RSS, RssFeedTable.ALL_COLUMNS, RssFeedTable.COLUMN_ID + "=" + id, null, null);
+		cursor.moveToFirst();
+		return cursorToRssFeed(cursor);
+	}
+	
+	private static RssFeed cursorToRssFeed(Cursor cursor)
+	{
+		RssFeed feed = new RssFeed();
+		feed.setTitle(cursor.getString(cursor.getColumnIndex(RssFeedTable.COLUMN_TITLE)));
+		feed.setDescription(cursor.getString(cursor.getColumnIndex(RssFeedTable.COLUMN_DESCRIPTION)));
+		feed.setLink(cursor.getString(cursor.getColumnIndex(RssFeedTable.COLUMN_LINK)));
+		feed.setDate(cursor.getString(cursor.getColumnIndex(RssFeedTable.COLUMN_DATE)));
+		
+		return feed;
 	}
 	
 	private static int toInteger(boolean value)

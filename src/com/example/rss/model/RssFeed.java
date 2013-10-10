@@ -20,6 +20,11 @@ public class RssFeed implements Serializable
 
     private List<FeedItem> feedItems = new ArrayList<FeedItem>();
 
+    public RssFeed()
+    {
+    	this("", "", "", "");
+    }
+    
     public RssFeed(String title, String link, String description, String date)
     {
         this.title = title;

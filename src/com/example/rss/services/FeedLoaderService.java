@@ -1,5 +1,6 @@
 package com.example.rss.services;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,6 +37,7 @@ public class FeedLoaderService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Map<String, RssFeed> feedMap = feedManager.getFeedMap();
+		ArrayList<RssFeed> removeableFeeds = new ArrayList<RssFeed>();
 		Set<String> keys = feedMap.keySet();
 		//the key is the link
 		for (String key : keys)
@@ -50,13 +52,18 @@ public class FeedLoaderService extends IntentService {
 				}
 				else
 				{
-					feedMap.remove(key);
+					removeableFeeds.remove(key);
 				}
 			}
             catch (Exception ex) {
                 ex.printStackTrace();
                 System.out.println("ERROR: "+ex.getMessage());
             }
+		}
+		
+		for (RssFeed feed : removeableFeeds)
+		{
+			feedMap.remove(feed);
 		}
 		
 		Intent refreshIntent = new Intent(RssDefines.REFRESH_FEED_LIST);

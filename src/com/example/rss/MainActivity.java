@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +23,8 @@ import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.example.rss.fragments.DetailList;
 import com.example.rss.fragments.FeedListFragment;
 import com.example.rss.fragments.SubscriberFragment;
+import com.example.rss.model.RssFeed;
+import com.example.rss.persistance.FeedDatabase;
 import com.example.rss.persistance.FeedManager;
 import com.example.rss.persistance.RssDefines;
 import com.example.rss.services.FeedLoaderService;
@@ -77,6 +80,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		filter = new IntentFilter(RssDefines.ADD_RSS_FEED);
 		filter.addAction(RssDefines.ADD_RSS_FEED);
 		LocalBroadcastManager.getInstance(this).registerReceiver(addFeedReceiver, filter);
+		
 	}
 	
 	@Override
