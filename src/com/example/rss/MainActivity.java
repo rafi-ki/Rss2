@@ -141,23 +141,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		}
         return super.onOptionsItemSelected(item);
 	}
-
-/*	//Button method to subscribe to the feed with the url from the edittextview of the same fragment
-	public void subscribeButtonClick(View v) {
-		//hide keyboard
-		InputMethodManager imm = (InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(findViewById(R.id.subscribe_url_input).getWindowToken(), 0);
-        EditText urlinput = (EditText) findViewById(R.id.subscribe_url_input);
-        String feedurlstring = urlinput.getEditableText().toString();
-        
-        Fragment f = getSupportFragmentManager().findFragmentById(R.id.main_activity);
-		TextView textView = (TextView) f.getView().findViewById(R.id.subscribe_tv_message);
-		textView.setText("validating! please wait ...");
-		
-		Intent validateIntent = new Intent(this, ValidateRssService.class);
-        validateIntent.putExtra(RssDefines.EXTRA_VALIDATE_RSS_URL, feedurlstring);
-        startService(validateIntent);
-    } */
 	
 	/**
 	 * stop refresh animation
@@ -230,7 +213,7 @@ public class MainActivity extends SherlockFragmentActivity {
 				if (fra instanceof FeedListFragment)
 				{
 					FeedListFragment feedListFragment = (FeedListFragment) fra;
-					feedListFragment.setFeedMapToListView();
+					feedListFragment.refreshFeedListFromDatabase();
 				}
 			}
 			if (action.equals(RssDefines.VALIDATE_RSS))

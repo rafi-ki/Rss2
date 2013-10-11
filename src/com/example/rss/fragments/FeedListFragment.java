@@ -3,19 +3,18 @@ package com.example.rss.fragments;
 
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
@@ -25,22 +24,21 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.rss.R;
-import com.example.rss.model.RssFeed;
+import com.example.rss.persistance.FeedContentProvider;
 import com.example.rss.persistance.FeedManager;
 import com.example.rss.persistance.RssDefines;
 import com.example.rss.persistance.RssFeedTable;
 import com.example.rss.services.FeedLoaderService;
 
-public class FeedListFragment extends SherlockListFragment {
-	
-	private static final String TITLE_REF = "title";
-	private static final String LINK_REF = "link";	
+public class FeedListFragment extends SherlockListFragment 
+	implements LoaderManager.LoaderCallbacks<Cursor> {
 	
 	private FeedManager feedmanager;
 	private RefreshFeedListReceiver receiver;
+	
+	private SimpleCursorAdapter adapter;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -66,9 +64,14 @@ public class FeedListFragment extends SherlockListFragment {
 	 {
 		 super.onActivityCreated(savedInstanceState);
 		 
+		 String[] from = {RssFeedTable.COLUMN_TITLE, RssFeedTable.COLUMN_LINK};
+		 int[] to = {R.id.subscribed_lv_item_title, R.id.subscribed_lv_item_link};
+		 adapter = new SimpleCursorAdapter(getActivity(), R.layout.subscribed_lv_item, null, from, to, 0); 
+		
+		 setListAdapter(adapter);
+		 getLoaderManager().initLoader(0, null, this);
+		 
 		 getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
-
-
 				@Override
 				public boolean onItemLongClick(AdapterView<?> adapterview, View view,
 						int position, long id) {
@@ -99,44 +102,6 @@ public class FeedListFragment extends SherlockListFragment {
 					return true;
 				}
 		    });
-		 
-		 setFeedMapToListView();
-	 }
-	 
-	 public void setFeedMapToListView()
-	 {
-		//TODO old
-//		 List<Map<String, String>> items = getFeedData();
-		 
-//		 SimpleAdapter adapter = new SimpleAdapter(getActivity(), items,
-//				 	R.layout.subscribed_lv_item, new String[] { TITLE_REF, LINK_REF },
-//				 	new int[] { R.id.subscribed_lv_item_title, R.id.subscribed_lv_item_link }
-//		 );
-		 
-		 //TODO new
-		 String[] from = {RssFeedTable.COLUMN_TITLE, RssFeedTable.COLUMN_LINK};
-		 int[] to = {R.id.subscribed_lv_item_title, R.id.subscribed_lv_item_link};
-		 SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(), R.layout.subscribed_lv_item, null, from, to, 0); 
-		
-		 setListAdapter(adapter);
-	 }
-	 
-	 private List<Map<String, String>> getFeedData()
-	 {
-		 List<Map<String, String>> returnedList = new ArrayList<Map<String, String>>();
-		 Map<String, RssFeed> feedMap = feedmanager.getFeedMap();
-		 HashMap<String, String> map = null;
-		 Set<String> keys = feedMap.keySet();
-		 RssFeed feed = null;
-		 for (String key : keys)
-		 {
-			 map = new HashMap<String, String>();
-			 feed = feedMap.get(key);
-			 map.put(TITLE_REF, feed.getTitle());
-			 map.put(LINK_REF, key);
-			 returnedList.add(map);
-		 }
-		 return returnedList;
 	 }
 	 
 	 @Override
@@ -145,7 +110,7 @@ public class FeedListFragment extends SherlockListFragment {
 		 super.onResume();
 		 
 		//disable up button in action bar for this fragment 
-			getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		 
 		 //define receiver for refreshing feed list
 		 IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
@@ -180,10 +145,29 @@ public class FeedListFragment extends SherlockListFragment {
 	 
 	 private class RefreshFeedListReceiver extends BroadcastReceiver
 	 {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (intent.getAction().equals(RssDefines.REFRESH_FEED_LIST))
-				setFeedMapToListView(); // refresh feed list
-		}
+		 @Override
+		 public void onReceive(Context context, Intent intent) {
+			 if (intent.getAction().equals(RssDefines.REFRESH_FEED_LIST))
+				 refreshFeedListFromDatabase();
+		 }
 	 }
+	 
+	 public void refreshFeedListFromDatabase()
+	 {
+		 getLoaderManager().restartLoader(0, null, this);
+	 }
+	 
+	 public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+	        Uri baseUri = FeedContentProvider.CONTENT_URI_RSS;
+	        return new CursorLoader(getActivity(), baseUri, new String[]{RssFeedTable.COLUMN_ID, RssFeedTable.COLUMN_TITLE, RssFeedTable.COLUMN_LINK},
+	        		null, null, null);
+    }
+
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(data);
+    }
+
+    public void onLoaderReset(Loader<Cursor> loader) {
+        adapter.swapCursor(null);
+    }
 }
