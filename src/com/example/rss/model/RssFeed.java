@@ -14,13 +14,14 @@ public class RssFeed implements Serializable
 	
 	private long id;
 	private String title;
+	private String feedUrl;
     private String link;
     private String description;
     private String date;
 
     private List<FeedItem> feedItems = new ArrayList<FeedItem>();
 
-    public RssFeed()
+	public RssFeed()
     {
     	this("", "", "", "");
     }
@@ -98,5 +99,13 @@ public class RssFeed implements Serializable
 
 	public void setId(long id) {
 		this.id = id;
+	}
+	
+	 public String getFeedUrl() {
+		return feedUrl;
+	}
+
+	public void setFeedUrl(String feedUrl) {
+		this.feedUrl = feedUrl;
 	}
 }

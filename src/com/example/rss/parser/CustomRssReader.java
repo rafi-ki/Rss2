@@ -28,6 +28,7 @@ public class CustomRssReader {
 	}
 
 	public RssFeed read(String url) {
+		System.out.println("url to parse: " + url);
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
 					.newDocumentBuilder();
@@ -49,6 +50,7 @@ public class CustomRssReader {
 			String strPubDate = pubDateElement.getTextContent();
 			
 			RssFeed feed = new RssFeed(strTitle, strLink, strDescription, strPubDate);
+			feed.setFeedUrl(url);
 			
 			// get the feed items
 			NodeList nodes = doc.getElementsByTagName("item");
@@ -66,7 +68,7 @@ public class CustomRssReader {
 			return feed;
 		}
 		catch (Exception ex) {
-			System.out.println("wrong url");
+			ex.printStackTrace();
 		}
 		
 		return null;

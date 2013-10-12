@@ -1,31 +1,29 @@
 package com.example.rss.fragments;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.rss.R;
-import com.example.rss.model.FeedItem;
-import com.example.rss.model.RssFeed;
-import com.example.rss.persistance.FeedManager;
+import com.example.rss.persistance.FeedContentProvider;
+import com.example.rss.persistance.FeedItemTable;
 import com.example.rss.persistance.RssDefines;
 
-public class DetailList extends SherlockListFragment {
+public class DetailList extends SherlockListFragment
+	implements LoaderManager.LoaderCallbacks<Cursor> {	
 	
-	private final static String TITLE_REF = "title";
-	private final static String LINK_REF = "link";
-	private final static String DESCRIPTION_REF = "description";
+	private SimpleCursorAdapter adapter;
+	private long rssFeedId = 0;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -41,36 +39,20 @@ public class DetailList extends SherlockListFragment {
 	{
 		super.onActivityCreated(savedInstanceState);
 		Bundle b = getArguments();
-		String link =b.getString(RssDefines.EXTRA_DATA_DETAILS_LINK);
-		setDetailsToListView(link);
+		rssFeedId = b.getLong(RssDefines.EXTRA_DATA_DETAILS_ID);
+		
+		String[] from = {FeedItemTable.COLUMN_TITLE, FeedItemTable.COLUMN_LINK, FeedItemTable.COLUMN_DESCRIPTION};
+		int [] to = {R.id.detail_lv_item_title, R.id.detail_lv_item_link, R.id.detail_lv_item_description};
+		adapter = new SimpleCursorAdapter(getActivity(), R.layout.detail_lv_item, null, from, to, 0);
+		setListAdapter(adapter);
+		
+		getLoaderManager().initLoader(1, null, this);
 	}
 	
-	public void setDetailsToListView(String url)
-	 {
-		 List<Map<String, String>> items = getDetailsData(url);
-		 SimpleAdapter adapter = new SimpleAdapter(getActivity(), items,
-				 	R.layout.detail_lv_item, new String[] { TITLE_REF, LINK_REF, DESCRIPTION_REF },
-				 	new int[] { R.id.detail_lv_item_title, R.id.detail_lv_item_link, R.id.detail_lv_item_description }
-		 );
-		 setListAdapter(adapter);
-	 }
-	 
-	 private List<Map<String, String>> getDetailsData(String url)
-	 {
-		 List<Map<String, String>> returnedList = new ArrayList<Map<String, String>>();
-		 Map<String, RssFeed> feedMap = FeedManager.getInstance().getFeedMap();
-		 Map<String, String> map = new HashMap<String, String>();
-		 RssFeed rssFeed = feedMap.get(url);
-		 for (FeedItem feedItem : rssFeed.getFeedItems())
-		 {
-			 map = new HashMap<String, String>();
-			 map.put(TITLE_REF, feedItem.getTitle());
-			 map.put(LINK_REF, feedItem.getLink());
-			 map.put(DESCRIPTION_REF, feedItem.getDescription());
-			 returnedList.add(map);
-		 }
-		 return returnedList;
-	 }
+	public void refreshDetailListFromDatabase()
+	{
+		getLoaderManager().restartLoader(0, null, this);
+	}
 	 
 	 @Override
 	 public void onListItemClick(ListView lv, View v, int position, long id)
@@ -82,6 +64,22 @@ public class DetailList extends SherlockListFragment {
 		 intent.setData(Uri.parse(link));
 		 startActivity(intent);
 	 }
-	 
-	 
+
+	 @Override
+	 public Loader<Cursor> onCreateLoader(int id, Bundle arg1) {
+		 Uri baseUri = FeedContentProvider.CONTENT_URI_FEED_ITEM;
+		 return new CursorLoader(getActivity(), baseUri, new String[]{FeedItemTable.COLUMN_ID, FeedItemTable.COLUMN_TITLE, FeedItemTable.COLUMN_LINK,
+			 FeedItemTable.COLUMN_DESCRIPTION, FeedItemTable.COLUMN_READ_STATE, FeedItemTable.COLUMN_STARRED_STATE},
+			 FeedItemTable.COLUMN_RSSFEED_ID + "=" + rssFeedId, null, null);
+	 }
+
+	 @Override
+	 public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		 adapter.swapCursor(cursor);
+	 }
+
+	 @Override
+	 public void onLoaderReset(Loader<Cursor> loader) {
+		 adapter.swapCursor(null);
+	 }
 }

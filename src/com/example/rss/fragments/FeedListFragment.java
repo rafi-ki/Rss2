@@ -141,13 +141,10 @@ public class FeedListFragment extends SherlockListFragment
 	 @Override
 	 public void onListItemClick(ListView lv, View v, int position, long id)
 	 {
-		 RelativeLayout layout = (RelativeLayout) v;
-		 TextView linkview = (TextView) layout.getChildAt(1); // get textview of link
-		 String link = linkview.getText().toString();
 		 Intent intent = new Intent(RssDefines.OPEN_DETAIL_FRAGMENT);
 		 
 		 // put the link as extra data so the main activity knows feed
-		 intent.putExtra(RssDefines.EXTRA_DATA_DETAILS_LINK, link);
+		 intent.putExtra(RssDefines.EXTRA_DATA_DETAILS_ID, id);
 		 LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 	 }
 	 

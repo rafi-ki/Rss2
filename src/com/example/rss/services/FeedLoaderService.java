@@ -29,12 +29,13 @@ public class FeedLoaderService extends IntentService {
 	protected void onHandleIntent(Intent intent)
 	{
 		List<RssFeed> feeds = FeedDatabase.getRssFeeds(this);
-		CustomRssReader reader = CustomRssReader.getInstance();
 		for (RssFeed feed : feeds)
 		{
 			try{
-				String link = feed.getLink();
-				RssFeed updatedFeed = reader.read(link);
+				CustomRssReader reader = CustomRssReader.getInstance();
+				String url = feed.getFeedUrl();
+				System.out.println("url in loader service: " + url);
+				RssFeed updatedFeed = reader.read(url);
 				if (updatedFeed != null)
 				{
 					FeedDatabase.updateRssFeed(this, feed.getId(), updatedFeed);
@@ -45,6 +46,8 @@ public class FeedLoaderService extends IntentService {
 				System.out.println("ERROR: "+ex.getMessage());
 			}
 		}
+		
+		System.out.println("loaded feeds successfully");
 		// TODO check for contentObserver, will it reseive the update?
 	}
 }

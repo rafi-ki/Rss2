@@ -50,9 +50,10 @@ public class FeedDatabase {
 		values.put(RssFeedTable.COLUMN_TITLE, feed.getTitle());
 		values.put(RssFeedTable.COLUMN_LINK, feed.getLink());
 		values.put(RssFeedTable.COLUMN_DESCRIPTION, feed.getDescription());
+		values.put(RssFeedTable.COLUMN_FEED_URL, feed.getFeedUrl());
 		values.put(RssFeedTable.COLUMN_DATE, feed.getDate());
 		
-		return cr.update(FeedContentProvider.CONTENT_URI_FEED_ITEM, values, RssFeedTable.COLUMN_ID + "=" + id, null);
+		return cr.update(FeedContentProvider.CONTENT_URI_RSS, values, RssFeedTable.COLUMN_ID + "=" + id, null);
 	}
 	
 	public static Uri insertRssFeed(Context c, RssFeed feed)
@@ -64,6 +65,7 @@ public class FeedDatabase {
 		values.put(RssFeedTable.COLUMN_DESCRIPTION, feed.getDescription());
 		values.put(RssFeedTable.COLUMN_LINK, feed.getLink());
 		values.put(RssFeedTable.COLUMN_DATE, feed.getDate());
+		values.put(RssFeedTable.COLUMN_FEED_URL, feed.getFeedUrl());
 		
 		return cr.insert(FeedContentProvider.CONTENT_URI_RSS, values);
 	}
@@ -92,10 +94,10 @@ public class FeedDatabase {
 		return cursorToRssFeed(cursor);
 	}
 	
-	public static RssFeed getRssFeedByLink(Context c, String link)
+	public static RssFeed getRssFeedByUrl(Context c, String url)
 	{
 		ContentResolver cr = c.getContentResolver();
-		Cursor cursor = cr.query(FeedContentProvider.CONTENT_URI_RSS, RssFeedTable.ALL_COLUMNS, RssFeedTable.COLUMN_LINK + "=" + link, null, null);
+		Cursor cursor = cr.query(FeedContentProvider.CONTENT_URI_RSS, RssFeedTable.ALL_COLUMNS, RssFeedTable.COLUMN_FEED_URL + "=" + url, null, null);
 		cursor.moveToFirst();
 		return cursorToRssFeed(cursor);
 	}
@@ -123,6 +125,7 @@ public class FeedDatabase {
 		feed.setDescription(cursor.getString(cursor.getColumnIndex(RssFeedTable.COLUMN_DESCRIPTION)));
 		feed.setLink(cursor.getString(cursor.getColumnIndex(RssFeedTable.COLUMN_LINK)));
 		feed.setDate(cursor.getString(cursor.getColumnIndex(RssFeedTable.COLUMN_DATE)));
+		feed.setFeedUrl(cursor.getString(cursor.getColumnIndex(RssFeedTable.COLUMN_FEED_URL)));
 		feed.setId(cursor.getLong(cursor.getColumnIndex(RssFeedTable.COLUMN_ID)));
 		
 		return feed;

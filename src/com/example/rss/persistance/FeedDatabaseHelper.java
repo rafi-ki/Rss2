@@ -8,7 +8,7 @@ public class FeedDatabaseHelper extends SQLiteOpenHelper{
 	
 	//Database Information
 	private static final String DATABASE_NAME = "feeds.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	
 	public FeedDatabaseHelper(Context context)
 	{

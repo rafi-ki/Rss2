@@ -165,11 +165,11 @@ public class MainActivity extends SherlockFragmentActivity {
 			
 			if (action.equals(RssDefines.OPEN_DETAIL_FRAGMENT))
 			{
-				String link = intent.getExtras().getString(RssDefines.EXTRA_DATA_DETAILS_LINK);
+				long id = intent.getExtras().getLong(RssDefines.EXTRA_DATA_DETAILS_ID);
 				transaction.addToBackStack(null);
 				DetailList detailList = new DetailList();
 				Bundle bundle = new Bundle();
-				bundle.putString(RssDefines.EXTRA_DATA_DETAILS_LINK, link);
+				bundle.putLong(RssDefines.EXTRA_DATA_DETAILS_ID, id);
 				detailList.setArguments(bundle);
 				transaction.replace(R.id.main_activity, detailList);
 				transaction.commit();

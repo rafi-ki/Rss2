@@ -14,13 +14,15 @@ public class RssFeedTable {
 	public static final String COLUMN_LINK = "link";
 	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_DATE = "date";
+	public static final String COLUMN_FEED_URL = "feedUrl";
 	
 	public static final String [] ALL_COLUMNS = {
 		COLUMN_ID, 
 		COLUMN_TITLE,
 		COLUMN_LINK,
 		COLUMN_DESCRIPTION,
-		COLUMN_DATE
+		COLUMN_DATE,
+		COLUMN_FEED_URL
 	};
 	
 
@@ -28,7 +30,8 @@ public class RssFeedTable {
 	private static final String CREATE_RSSFEED = "CREATE TABLE "
 			+ TABLE_RSSFEED + "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
 			+ COLUMN_TITLE + " TEXT, " 
-			+ COLUMN_LINK + " TEXT UNIQUE, "
+			+ COLUMN_FEED_URL + " TEXT UNIQUE, "
+			+ COLUMN_LINK + " TEXT, "
 			+ COLUMN_DESCRIPTION + " TEXT, " 
 			+ COLUMN_DATE + " TEXT);";
 	
