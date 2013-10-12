@@ -23,7 +23,7 @@ public class DetailList extends SherlockListFragment
 	implements LoaderManager.LoaderCallbacks<Cursor> {	
 	
 	private SimpleCursorAdapter adapter;
-	private long rssFeedId = 0;
+	private long rssFeedId;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -51,7 +51,7 @@ public class DetailList extends SherlockListFragment
 	
 	public void refreshDetailListFromDatabase()
 	{
-		getLoaderManager().restartLoader(0, null, this);
+		getLoaderManager().restartLoader(1, null, this);
 	}
 	 
 	 @Override

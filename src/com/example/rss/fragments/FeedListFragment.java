@@ -33,7 +33,6 @@ import com.example.rss.persistance.FeedContentProvider;
 import com.example.rss.persistance.FeedManager;
 import com.example.rss.persistance.RssDefines;
 import com.example.rss.persistance.RssFeedTable;
-import com.example.rss.services.FeedLoaderService;
 
 public class FeedListFragment extends SherlockListFragment 
 	implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -58,9 +57,6 @@ public class FeedListFragment extends SherlockListFragment
 		//define receiver for refreshing feed list
 		IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
-		 
-		Intent intent = new Intent(getActivity(), FeedLoaderService.class);
-		getActivity().startService(intent);
 		 
 	}
 		

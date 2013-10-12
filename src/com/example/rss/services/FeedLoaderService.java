@@ -39,6 +39,7 @@ public class FeedLoaderService extends IntentService {
 				if (updatedFeed != null)
 				{
 					FeedDatabase.updateRssFeed(this, feed.getId(), updatedFeed);
+					System.out.println("updated feed with id " + feed.getId());
 				}
 			} catch (Exception ex)
 			{

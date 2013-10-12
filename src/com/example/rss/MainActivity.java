@@ -22,7 +22,6 @@ import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.example.rss.fragments.DetailList;
 import com.example.rss.fragments.FeedListFragment;
 import com.example.rss.fragments.SubscriberFragment;
-import com.example.rss.persistance.FeedManager;
 import com.example.rss.persistance.RssDefines;
 import com.example.rss.services.FeedLoaderService;
 import com.example.rss.services.ValidateRssService;

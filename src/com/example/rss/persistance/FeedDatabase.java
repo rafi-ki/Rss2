@@ -46,7 +46,6 @@ public class FeedDatabase {
 	{
 		ContentResolver cr = c.getContentResolver();
 		ContentValues values = new ContentValues();
-		values.put(RssFeedTable.COLUMN_ID, feed.getId());
 		values.put(RssFeedTable.COLUMN_TITLE, feed.getTitle());
 		values.put(RssFeedTable.COLUMN_LINK, feed.getLink());
 		values.put(RssFeedTable.COLUMN_DESCRIPTION, feed.getDescription());
