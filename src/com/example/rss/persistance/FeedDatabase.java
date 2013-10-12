@@ -1,13 +1,16 @@
 package com.example.rss.persistance;
 
-import com.example.rss.model.FeedItem;
-import com.example.rss.model.RssFeed;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+
+import com.example.rss.model.FeedItem;
+import com.example.rss.model.RssFeed;
 
 public class FeedDatabase {
 	
@@ -89,6 +92,30 @@ public class FeedDatabase {
 		return cursorToRssFeed(cursor);
 	}
 	
+	public static RssFeed getRssFeedByLink(Context c, String link)
+	{
+		ContentResolver cr = c.getContentResolver();
+		Cursor cursor = cr.query(FeedContentProvider.CONTENT_URI_RSS, RssFeedTable.ALL_COLUMNS, RssFeedTable.COLUMN_LINK + "=" + link, null, null);
+		cursor.moveToFirst();
+		return cursorToRssFeed(cursor);
+	}
+	
+	public static List<RssFeed> getRssFeeds(Context c)
+	{
+		ContentResolver cr = c.getContentResolver();
+		Cursor cursor = cr.query(FeedContentProvider.CONTENT_URI_RSS, RssFeedTable.ALL_COLUMNS, null, null, null);
+		List<RssFeed> feedList = new ArrayList<RssFeed>();
+		
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast())
+		{
+			feedList.add(cursorToRssFeed(cursor));
+			cursor.moveToNext();
+		}
+		
+		return feedList;
+	}
+	
 	private static RssFeed cursorToRssFeed(Cursor cursor)
 	{
 		RssFeed feed = new RssFeed();
@@ -96,6 +123,7 @@ public class FeedDatabase {
 		feed.setDescription(cursor.getString(cursor.getColumnIndex(RssFeedTable.COLUMN_DESCRIPTION)));
 		feed.setLink(cursor.getString(cursor.getColumnIndex(RssFeedTable.COLUMN_LINK)));
 		feed.setDate(cursor.getString(cursor.getColumnIndex(RssFeedTable.COLUMN_DATE)));
+		feed.setId(cursor.getLong(cursor.getColumnIndex(RssFeedTable.COLUMN_ID)));
 		
 		return feed;
 	}

@@ -9,7 +9,6 @@ import com.example.rss.model.FeedItem;
 import com.example.rss.model.RssFeed;
 import com.example.rss.parser.CustomRssReader;
 import com.example.rss.persistance.FeedDatabase;
-import com.example.rss.persistance.FeedManager;
 import com.example.rss.persistance.RssDefines;
 
 public class ValidateRssService extends IntentService {

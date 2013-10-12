@@ -28,7 +28,7 @@ public class RssFeedTable {
 	private static final String CREATE_RSSFEED = "CREATE TABLE "
 			+ TABLE_RSSFEED + "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
 			+ COLUMN_TITLE + " TEXT, " 
-			+ COLUMN_LINK + " TEXT, "
+			+ COLUMN_LINK + " TEXT UNIQUE, "
 			+ COLUMN_DESCRIPTION + " TEXT, " 
 			+ COLUMN_DATE + " TEXT);";
 	

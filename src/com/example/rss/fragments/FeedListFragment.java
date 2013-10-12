@@ -9,9 +9,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -26,6 +28,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.rss.R;
+import com.example.rss.observer.RssFeedObserver;
 import com.example.rss.persistance.FeedContentProvider;
 import com.example.rss.persistance.FeedManager;
 import com.example.rss.persistance.RssDefines;
@@ -37,6 +40,7 @@ public class FeedListFragment extends SherlockListFragment
 	
 	private FeedManager feedmanager;
 	private RefreshFeedListReceiver receiver;
+	private ContentObserver feedListObserver;
 	
 	private SimpleCursorAdapter adapter;
 	
@@ -49,6 +53,7 @@ public class FeedListFragment extends SherlockListFragment
 		
 		feedmanager= FeedManager.getInstance();
 		receiver = new RefreshFeedListReceiver();
+		feedListObserver = new RssFeedObserver(new Handler());
 		
 		//define receiver for refreshing feed list
 		IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
@@ -114,6 +119,9 @@ public class FeedListFragment extends SherlockListFragment
 		
 		// refresh list on anytime feed list gets back focus
 		refreshFeedListFromDatabase();
+		
+		// register content observer
+		getActivity().getContentResolver().registerContentObserver(FeedContentProvider.CONTENT_URI_RSS, true, feedListObserver);
 		 
 		//define receiver for refreshing feed list
 		IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
@@ -125,6 +133,9 @@ public class FeedListFragment extends SherlockListFragment
 	 {
 		 super.onPause();
 		 LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
+		 
+		 // unregister content observer
+		 getActivity().getContentResolver().unregisterContentObserver(feedListObserver);
 	 }
 	 
 	 @Override
