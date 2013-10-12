@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,8 +22,6 @@ import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.example.rss.fragments.DetailList;
 import com.example.rss.fragments.FeedListFragment;
 import com.example.rss.fragments.SubscriberFragment;
-import com.example.rss.model.RssFeed;
-import com.example.rss.persistance.FeedDatabase;
 import com.example.rss.persistance.FeedManager;
 import com.example.rss.persistance.RssDefines;
 import com.example.rss.services.FeedLoaderService;
@@ -32,7 +29,6 @@ import com.example.rss.services.ValidateRssService;
 
 public class MainActivity extends SherlockFragmentActivity {
 
-	private FeedManager feedmanager;
 	private FragmentDistributorReceiver distributorReceiver;
 	private UpdateFeedListReceiver updateReceiver;
 	private AddFeedReceiver addFeedReceiver;
@@ -49,9 +45,6 @@ public class MainActivity extends SherlockFragmentActivity {
 		updateReceiver = new UpdateFeedListReceiver();
 		addFeedReceiver = new AddFeedReceiver();
 		
-		feedmanager = FeedManager.getInstance(); //gets instance of the feedmanager (singelton)
-		feedmanager.restoreSubscribedFeeds(this);
-		
 		//update all feeds onCreate
 		runRefreshAnimation();
 		updateAllFeeds();
@@ -66,7 +59,6 @@ public class MainActivity extends SherlockFragmentActivity {
 	protected void onResume()
 	{
 		super.onResume();
-		System.out.println("main onResume()");
 		
 		IntentFilter filter = new IntentFilter(RssDefines.OPEN_FEED_LIST_FRAGMENT);
 		filter.addAction(RssDefines.OPEN_DETAIL_FRAGMENT);
@@ -87,8 +79,6 @@ public class MainActivity extends SherlockFragmentActivity {
 	protected void onPause()
 	{
 		super.onPause();
-		System.out.println("main onPause()");
-		feedmanager.storeSubscribedFeeds(this); // store current feeds
 		
 		// unregister receiver
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(distributorReceiver); 
@@ -209,16 +199,15 @@ public class MainActivity extends SherlockFragmentActivity {
 			{
 				stopRefreshAnimation(); //stop refresh if necessary
 				System.out.println("Received update feed list message");
-				Fragment fra = fragmentManager.findFragmentById(R.id.main_activity);
-				if (fra instanceof FeedListFragment)
-				{
-					FeedListFragment feedListFragment = (FeedListFragment) fra;
-					feedListFragment.refreshFeedListFromDatabase();
-				}
+//				Fragment fra = fragmentManager.findFragmentById(R.id.main_activity);
+//				if (fra instanceof FeedListFragment)
+//				{
+//					FeedListFragment feedListFragment = (FeedListFragment) fra;
+//					feedListFragment.refreshFeedListFromDatabase();
+//				}
 			}
 			if (action.equals(RssDefines.VALIDATE_RSS))
 			{
-				System.out.println("recieved validate rss result");
 				if (intent.getBooleanExtra(RssDefines.EXTRA_VALIDATE_RSS_RESULT, false))
 				{
 					fragmentManager.popBackStack();

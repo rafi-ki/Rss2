@@ -51,11 +51,11 @@ public class FeedListFragment extends SherlockListFragment
 		receiver = new RefreshFeedListReceiver();
 		
 		//define receiver for refreshing feed list
-		 IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
-		 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
+		IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
+		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
 		 
-		 Intent intent = new Intent(getActivity(), FeedLoaderService.class);
-		 getActivity().startService(intent);
+		Intent intent = new Intent(getActivity(), FeedLoaderService.class);
+		getActivity().startService(intent);
 		 
 	}
 		
@@ -111,10 +111,13 @@ public class FeedListFragment extends SherlockListFragment
 		 
 		//disable up button in action bar for this fragment 
 		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+		
+		// refresh list on anytime feed list gets back focus
+		refreshFeedListFromDatabase();
 		 
-		 //define receiver for refreshing feed list
-		 IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
-		 LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
+		//define receiver for refreshing feed list
+		IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
+		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
 	 }
 	 
 	 @Override

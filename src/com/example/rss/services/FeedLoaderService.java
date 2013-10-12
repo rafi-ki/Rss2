@@ -24,13 +24,11 @@ public class FeedLoaderService extends IntentService {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-	    System.out.println("loading feeds");
 	    return super.onStartCommand(intent,flags,startId);
 	}
 	
 	@Override
 	public void onDestroy() {
-		System.out.println("feeds load destroyed");
 		super.onDestroy();
 	}
 
