@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/detail_lv_item_background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    >
 
     <TextView
         android:id="@+id/detail_lv_item_title"
@@ -11,6 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:text="title"
          />
 
     <TextView
@@ -20,6 +23,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@id/detail_lv_item_title"
+        android:text="link"
          />
 
     <TextView
@@ -30,6 +34,15 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@id/detail_lv_item_link"
+        android:text="description"
          />
+
+    <TextView
+        android:id="@+id/detail_lv_item_starred"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="starred" />
 
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -41,10 +42,36 @@ public class DetailList extends SherlockListFragment
 		Bundle b = getArguments();
 		rssFeedId = b.getLong(RssDefines.EXTRA_DATA_DETAILS_ID);
 		
-		String[] from = {FeedItemTable.COLUMN_TITLE, FeedItemTable.COLUMN_LINK, FeedItemTable.COLUMN_DESCRIPTION};
-		int [] to = {R.id.detail_lv_item_title, R.id.detail_lv_item_link, R.id.detail_lv_item_description};
+		String[] from = {FeedItemTable.COLUMN_TITLE, FeedItemTable.COLUMN_LINK, FeedItemTable.COLUMN_DESCRIPTION, FeedItemTable.COLUMN_STARRED_STATE, FeedItemTable.COLUMN_READ_STATE};
+		int [] to = {R.id.detail_lv_item_title, R.id.detail_lv_item_link, R.id.detail_lv_item_description, R.id.detail_lv_item_starred, R.id.detail_lv_item_background};
 		adapter = new SimpleCursorAdapter(getActivity(), R.layout.detail_lv_item, null, from, to, 0);
 		setListAdapter(adapter);
+		
+		adapter.setViewBinder(new ViewBinder(){
+			@Override
+			public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+				switch(view.getId())
+				{
+				case R.id.detail_lv_item_starred:
+				{
+					// use starred textview for indicating starred state
+					TextView tv = (TextView) view;
+					if (cursor.getInt(columnIndex) == 0) // 0 => not starred, 1 => starred
+						tv.setText("not starred");
+					else
+						tv.setText("starred");
+					return true;
+				}
+				case R.id.detail_lv_item_background:
+					// use background for indicating read state
+					if (cursor.getInt(columnIndex) == 0) // 0 => not read, 1 => read
+						view.setBackgroundResource(R.color.gray);
+					return true;
+				default:
+					return false; // not handled within this method
+				}
+			}
+		});
 		
 		getLoaderManager().initLoader(1, null, this);
 	}

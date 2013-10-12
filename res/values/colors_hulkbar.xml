@@ -19,4 +19,5 @@
 
 <resources>
     <color name="pressed_hulkbar">#CC99CC00</color>
+    <color name="gray">#CCCCCC</color>
 </resources>
