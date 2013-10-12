@@ -72,8 +72,8 @@ public class FeedListFragment extends SherlockListFragment
 		 String[] from = {RssFeedTable.COLUMN_TITLE, RssFeedTable.COLUMN_LINK};
 		 int[] to = {R.id.subscribed_lv_item_title, R.id.subscribed_lv_item_link};
 		 adapter = new SimpleCursorAdapter(getActivity(), R.layout.subscribed_lv_item, null, from, to, 0); 
-		
 		 setListAdapter(adapter);
+		 
 		 getLoaderManager().initLoader(0, null, this);
 		 
 		 getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
