@@ -16,11 +16,18 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.example.rss.R;
 import com.example.rss.observer.FeedItemObserver;
 import com.example.rss.persistance.FeedContentProvider;
@@ -34,6 +41,54 @@ public class DetailList extends SherlockListFragment
 	private long rssFeedId;
 	private ContentObserver detailListObserver;
 	private RefreshDetailListReceiver receiver;
+	
+	private ActionMode mActionMode;
+	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback(){
+
+		@Override
+	    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+	        // Inflate a menu resource providing context menu items
+	        MenuInflater inflater = mode.getMenuInflater();
+	        inflater.inflate(R.menu.detail_list_action_menu, menu);
+	        return true;
+	    }
+
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			 // Return false if nothing is done
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			switch (item.getItemId()) {
+            case R.id.action_detail_list_delete:
+            	Toast.makeText(getActivity(), "DELETE BITCH!!!", Toast.LENGTH_SHORT).show();
+                mActionMode.finish();
+            	return true;
+            	
+            case R.id.action_detail_list_read:
+            	Toast.makeText(getActivity(), "IT GONNA BE READ BITCH!!!", Toast.LENGTH_SHORT).show();
+                mActionMode.finish();
+            	return true;
+            	
+            case R.id.action_detail_list_star:
+            	Toast.makeText(getActivity(), "OH YEAH A STAR BITCH!!!", Toast.LENGTH_SHORT).show();
+                mActionMode.finish();
+            	return true;
+            	
+            default:
+                return false;
+        }
+
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			mActionMode=null;
+			
+		}};
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -86,6 +141,25 @@ public class DetailList extends SherlockListFragment
 		});
 		
 		getLoaderManager().initLoader(1, null, this);
+		
+		getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> adapterview, View view,
+					int position, long id) {
+				
+			
+				 if(mActionMode != null){
+					 mActionMode.finish();
+				 }
+				 
+				 if(mActionMode == null){
+			        // Start the CAB using the ActionMode.Callback defined above
+			        mActionMode = getSherlockActivity().startActionMode( mActionModeCallback);
+			        view.setSelected(true);  
+				 }
+				 return true;
+			}
+	    });
 	}
 	
 	public void onResume()

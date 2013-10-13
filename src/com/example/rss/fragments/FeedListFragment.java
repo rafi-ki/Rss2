@@ -1,9 +1,5 @@
 package com.example.rss.fragments;
 
-
-
-
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +46,7 @@ public class FeedListFragment extends SherlockListFragment
 	
 	private SimpleCursorAdapter adapter;
 	
+	private String itemlinktodelete;
 	private ActionMode mActionMode;
 	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback(){
 
@@ -72,6 +69,12 @@ public class FeedListFragment extends SherlockListFragment
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			switch (item.getItemId()) {
             case R.id.action_feed_list_delete:
+            	
+            	feedmanager.delFeed(itemlinktodelete);
+	        	   
+	        	Intent in = new Intent(RssDefines.REFRESH_FEED_LIST);
+	        	LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(in);
+            	
             	Toast.makeText(getActivity(), "DELETE BITCH!!!", Toast.LENGTH_SHORT).show();
                 mActionMode.finish();
             	return true;
@@ -126,27 +129,7 @@ public class FeedListFragment extends SherlockListFragment
 					// Toast.makeText(getActivity(), "Long press!", Toast.LENGTH_SHORT).show();
 					RelativeLayout layout = (RelativeLayout) view;
 					 TextView linkview = (TextView) layout.getChildAt(1); // get textview of link
-					 final String itemlink = linkview.getText().toString();
-					/*AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-					builder.setMessage(R.string.list_item_delet_confirm_message).setTitle(R.string.list_item_delet_confirm_title);
-					builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-				           public void onClick(DialogInterface dialog, int id) {
-				        	   feedmanager.delFeed(itemlink);
-				        	   
-				        	   Intent in = new Intent(RssDefines.REFRESH_FEED_LIST);
-				        	   LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(in);
-				           }
-				       });
-					builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-				           public void onClick(DialogInterface dialog, int id) {
-				               // User cancelled the dialog so do nothing
-				           }
-				       });
-
-					AlertDialog dialog = builder.create();
-					dialog.show();*/
-					 
+					 itemlinktodelete = linkview.getText().toString();
 				
 					 if(mActionMode != null){
 						 mActionMode.finish();

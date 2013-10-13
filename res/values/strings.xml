@@ -11,4 +11,6 @@
 	<string name="ok">OK</string>
 	<string name="cancel">cancel</string>
 	<string name="action_delete">delete</string>
+	<string name="action_read">read</string>
+	<string name="action_star">star</string>
 </resources>

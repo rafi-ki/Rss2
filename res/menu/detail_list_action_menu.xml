@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item 
+        android:id="@+id/action_detail_list_star"
+        android:title="@string/action_star"        
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_important"
+        />
+    
+    <item 
+        android:id="@+id/action_detail_list_read"
+        android:title="@string/action_read"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_read"
+        />
+    
+    
+    <item 
+        android:id="@+id/action_detail_list_delete"
+        android:title="@string/action_delete"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_discard"
+        />
+
+</menu>
