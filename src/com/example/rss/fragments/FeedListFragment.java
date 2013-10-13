@@ -3,10 +3,9 @@ package com.example.rss.fragments;
 
 
 
-import android.app.AlertDialog;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
@@ -19,16 +18,23 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SimpleCursorAdapter;
+
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.example.rss.R;
-import com.example.rss.observer.FeedItemObserver;
+
 import com.example.rss.observer.RssFeedObserver;
 import com.example.rss.persistance.FeedContentProvider;
 import com.example.rss.persistance.FeedManager;
@@ -43,6 +49,44 @@ public class FeedListFragment extends SherlockListFragment
 	private ContentObserver feedListObserver;
 	
 	private SimpleCursorAdapter adapter;
+	
+	private ActionMode mActionMode;
+	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback(){
+
+		@Override
+	    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+	        // Inflate a menu resource providing context menu items
+	        MenuInflater inflater = mode.getMenuInflater();
+	        inflater.inflate(R.menu.feed_list_action_menu, menu);
+	        return true;
+	    }
+
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			 // Return false if nothing is done
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			switch (item.getItemId()) {
+            case R.id.action_feed_list_delete:
+            	Toast.makeText(getActivity(), "DELETE BITCH!!!", Toast.LENGTH_SHORT).show();
+                mActionMode.finish();
+            	return true;
+            default:
+                return false;
+        }
+
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			mActionMode=null;
+			
+		}};
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -83,7 +127,7 @@ public class FeedListFragment extends SherlockListFragment
 					RelativeLayout layout = (RelativeLayout) view;
 					 TextView linkview = (TextView) layout.getChildAt(1); // get textview of link
 					 final String itemlink = linkview.getText().toString();
-					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					/*AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
 					builder.setMessage(R.string.list_item_delet_confirm_message).setTitle(R.string.list_item_delet_confirm_title);
 					builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -101,8 +145,19 @@ public class FeedListFragment extends SherlockListFragment
 				       });
 
 					AlertDialog dialog = builder.create();
-					dialog.show();
-					return true;
+					dialog.show();*/
+					 
+				
+					 if(mActionMode != null){
+						 mActionMode.finish();
+					 }
+					 
+					 if(mActionMode == null){
+				        // Start the CAB using the ActionMode.Callback defined above
+				        mActionMode = getSherlockActivity().startActionMode( mActionModeCallback);
+				        view.setSelected(true);  
+					 }
+					 return true;
 				}
 		    });
 	 }

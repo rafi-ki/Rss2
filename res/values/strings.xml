@@ -10,4 +10,5 @@
 	<string name="list_item_delet_confirm_title">Delete Feed</string>
 	<string name="ok">OK</string>
 	<string name="cancel">cancel</string>
+	<string name="action_delete">delete</string>
 </resources>
