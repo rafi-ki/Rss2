@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.rss.R;
+import com.example.rss.observer.FeedItemObserver;
 import com.example.rss.observer.RssFeedObserver;
 import com.example.rss.persistance.FeedContentProvider;
 import com.example.rss.persistance.FeedManager;
@@ -52,7 +53,8 @@ public class FeedListFragment extends SherlockListFragment
 		
 		feedmanager= FeedManager.getInstance();
 		receiver = new RefreshFeedListReceiver();
-		feedListObserver = new RssFeedObserver(new Handler());
+		feedListObserver = new RssFeedObserver(new Handler(), this.getActivity());
+		
 		
 		//define receiver for refreshing feed list
 		IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);

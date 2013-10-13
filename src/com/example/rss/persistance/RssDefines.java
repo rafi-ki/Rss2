@@ -1,5 +1,6 @@
 package com.example.rss.persistance;
 
+
 public class RssDefines {
 	public static final String OPEN_FEED_LIST_FRAGMENT = "open_feed_list_fragment";
 	public static final String OPEN_DETAIL_FRAGMENT = "open_detail_fragment";
@@ -13,5 +14,6 @@ public class RssDefines {
 	public static final String VALIDATE_RSS = "validate_rss";
 	
 	public static final String ADD_RSS_FEED = "add_rss_feed";
+	public static final String REFRESH_DETAIL_LIST = "refresh_detail_list";
 	
 }

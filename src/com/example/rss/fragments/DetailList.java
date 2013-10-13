@@ -1,12 +1,18 @@
 package com.example.rss.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.view.View;
@@ -16,6 +22,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.rss.R;
+import com.example.rss.observer.FeedItemObserver;
 import com.example.rss.persistance.FeedContentProvider;
 import com.example.rss.persistance.FeedItemTable;
 import com.example.rss.persistance.RssDefines;
@@ -25,6 +32,8 @@ public class DetailList extends SherlockListFragment
 	
 	private SimpleCursorAdapter adapter;
 	private long rssFeedId;
+	private ContentObserver detailListObserver;
+	private RefreshDetailListReceiver receiver;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -33,6 +42,9 @@ public class DetailList extends SherlockListFragment
 		
 		//get up button in action bar for this fragment
 		 getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true); 
+		 
+		 detailListObserver = new FeedItemObserver(new Handler(), this.getActivity());
+		 receiver = new RefreshDetailListReceiver();
 	}
 	
 	@Override
@@ -76,6 +88,22 @@ public class DetailList extends SherlockListFragment
 		getLoaderManager().initLoader(1, null, this);
 	}
 	
+	public void onResume()
+	{
+		super.onResume();
+		
+		//define receiver for refreshing feed list
+		IntentFilter filter = new IntentFilter(RssDefines.REFRESH_DETAIL_LIST);
+		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
+	}
+	
+	public void onPause()
+	{
+		super.onPause();
+		
+		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
+	}
+	
 	public void refreshDetailListFromDatabase()
 	{
 		getLoaderManager().restartLoader(1, null, this);
@@ -90,6 +118,15 @@ public class DetailList extends SherlockListFragment
 		 Intent intent = new Intent(Intent.ACTION_VIEW);
 		 intent.setData(Uri.parse(link));
 		 startActivity(intent);
+	 }
+	 
+	 private class RefreshDetailListReceiver extends BroadcastReceiver
+	 {
+		 @Override
+		 public void onReceive(Context context, Intent intent) {
+			 if (intent.getAction().equals(RssDefines.REFRESH_DETAIL_LIST))
+				 refreshDetailListFromDatabase();
+		 }
 	 }
 
 	 @Override

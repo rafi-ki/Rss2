@@ -198,12 +198,12 @@ public class MainActivity extends SherlockFragmentActivity {
 			{
 				stopRefreshAnimation(); //stop refresh if necessary
 				System.out.println("Received update feed list message");
-//				Fragment fra = fragmentManager.findFragmentById(R.id.main_activity);
-//				if (fra instanceof FeedListFragment)
-//				{
-//					FeedListFragment feedListFragment = (FeedListFragment) fra;
-//					feedListFragment.refreshFeedListFromDatabase();
-//				}
+				Fragment fra = fragmentManager.findFragmentById(R.id.main_activity);
+				if (fra instanceof FeedListFragment)
+				{
+					FeedListFragment feedListFragment = (FeedListFragment) fra;
+					feedListFragment.refreshFeedListFromDatabase();
+				}
 			}
 			if (action.equals(RssDefines.VALIDATE_RSS))
 			{
