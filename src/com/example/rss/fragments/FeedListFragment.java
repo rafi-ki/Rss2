@@ -14,14 +14,10 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SimpleCursorAdapter;
-
-
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -30,23 +26,21 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.example.rss.R;
-
 import com.example.rss.observer.RssFeedObserver;
 import com.example.rss.persistance.FeedContentProvider;
-import com.example.rss.persistance.FeedManager;
+import com.example.rss.persistance.FeedDatabase;
 import com.example.rss.persistance.RssDefines;
 import com.example.rss.persistance.RssFeedTable;
 
 public class FeedListFragment extends SherlockListFragment 
 	implements LoaderManager.LoaderCallbacks<Cursor> {
 	
-	private FeedManager feedmanager;
 	private RefreshFeedListReceiver receiver;
 	private ContentObserver feedListObserver;
 	
 	private SimpleCursorAdapter adapter;
 	
-	private String itemlinktodelete;
+	private long idToDelete;
 	private ActionMode mActionMode;
 	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback(){
 
@@ -70,11 +64,8 @@ public class FeedListFragment extends SherlockListFragment
 			switch (item.getItemId()) {
             case R.id.action_feed_list_delete:
             	
-            	feedmanager.delFeed(itemlinktodelete);
-	        	   
-	        	Intent in = new Intent(RssDefines.REFRESH_FEED_LIST);
-	        	LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(in);
-            	
+            	FeedDatabase.deleteRssFeedById(getActivity(), idToDelete);
+            	// don't need to send update ui because it is handled by the content observer!!!
             	Toast.makeText(getActivity(), "DELETE BITCH!!!", Toast.LENGTH_SHORT).show();
                 mActionMode.finish();
             	return true;
@@ -97,8 +88,6 @@ public class FeedListFragment extends SherlockListFragment
 		super.onCreate(savedInstanceState);
 		System.out.println("FeedList-Fragment created");
 		
-		
-		feedmanager= FeedManager.getInstance();
 		receiver = new RefreshFeedListReceiver();
 		feedListObserver = new RssFeedObserver(new Handler(), this.getActivity());
 		
@@ -126,10 +115,7 @@ public class FeedListFragment extends SherlockListFragment
 				public boolean onItemLongClick(AdapterView<?> adapterview, View view,
 						int position, long id) {
 					
-					// Toast.makeText(getActivity(), "Long press!", Toast.LENGTH_SHORT).show();
-					RelativeLayout layout = (RelativeLayout) view;
-					 TextView linkview = (TextView) layout.getChildAt(1); // get textview of link
-					 itemlinktodelete = linkview.getText().toString();
+					 idToDelete = id;
 				
 					 if(mActionMode != null){
 						 mActionMode.finish();

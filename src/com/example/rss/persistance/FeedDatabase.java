@@ -17,6 +17,7 @@ public class FeedDatabase {
 	public static int deleteRssFeedById(Context c, long id)
 	{
 		ContentResolver cr = c.getContentResolver();
+		cr.delete(FeedContentProvider.CONTENT_URI_FEED_ITEM, FeedItemTable.COLUMN_RSSFEED_ID + "=" + id, null);
 		return cr.delete(FeedContentProvider.CONTENT_URI_RSS, RssFeedTable.COLUMN_ID + "=" + id, null);
 	}
 	
