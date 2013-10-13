@@ -34,12 +34,10 @@ public class FeedLoaderService extends IntentService {
 			try{
 				CustomRssReader reader = CustomRssReader.getInstance();
 				String url = feed.getFeedUrl();
-				System.out.println("url in loader service: " + url);
 				RssFeed updatedFeed = reader.read(url);
 				if (updatedFeed != null)
 				{
 					FeedDatabase.updateRssFeed(this, feed.getId(), updatedFeed);
-					System.out.println("updated feed with id " + feed.getId());
 				}
 			} catch (Exception ex)
 			{

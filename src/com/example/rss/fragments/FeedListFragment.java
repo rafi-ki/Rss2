@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -65,6 +66,7 @@ public class FeedListFragment extends SherlockListFragment
             case R.id.action_feed_list_delete:
             	
             	FeedDatabase.deleteRssFeedById(getActivity(), idToDelete);
+            	
             	// don't need to send update ui because it is handled by the content observer!!!
             	Toast.makeText(getActivity(), "DELETE BITCH!!!", Toast.LENGTH_SHORT).show();
                 mActionMode.finish();
@@ -91,11 +93,9 @@ public class FeedListFragment extends SherlockListFragment
 		receiver = new RefreshFeedListReceiver();
 		feedListObserver = new RssFeedObserver(new Handler(), this.getActivity());
 		
-		
 		//define receiver for refreshing feed list
 		IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
-		 
 	}
 		
 	 @Override
@@ -129,6 +129,8 @@ public class FeedListFragment extends SherlockListFragment
 					 return true;
 				}
 		    });
+		 
+		 this.getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 	 }
 	 
 	 @Override
@@ -139,7 +141,6 @@ public class FeedListFragment extends SherlockListFragment
 		//disable up button in action bar for this fragment 
 		getSherlockActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		
-		// refresh list on anytime feed list gets back focus
 		refreshFeedListFromDatabase();
 		
 		// register content observer

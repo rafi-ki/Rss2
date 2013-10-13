@@ -210,6 +210,9 @@ public class MainActivity extends SherlockFragmentActivity {
 				if (intent.getBooleanExtra(RssDefines.EXTRA_VALIDATE_RSS_RESULT, false))
 				{
 					fragmentManager.popBackStack();
+					
+					Intent refreshIntent = new Intent(RssDefines.REFRESH_FEED_LIST);
+					LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(refreshIntent);
 				}
 				else
 				{

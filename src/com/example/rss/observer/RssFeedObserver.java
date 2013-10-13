@@ -22,5 +22,4 @@ public class RssFeedObserver extends ContentObserver {
 		LocalBroadcastManager.getInstance(c).sendBroadcast(updateUIIntent);
 		System.out.println("RssFeeds has changed");
 	}
-	
 }
