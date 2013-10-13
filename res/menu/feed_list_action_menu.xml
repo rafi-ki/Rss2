@@ -4,6 +4,7 @@
         android:id="@+id/action_feed_list_delete"
         android:title="@string/action_delete"
         android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_discard"
         />
     
 
