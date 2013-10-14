@@ -63,10 +63,6 @@ public class DetailList extends SherlockListFragment
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			switch (item.getItemId()) {
-            case R.id.action_detail_list_delete:
-            	Toast.makeText(getActivity(), "DELETE BITCH!!!", Toast.LENGTH_SHORT).show();
-                mActionMode.finish();
-            	return true;
             	
             case R.id.action_detail_list_read:
             	Toast.makeText(getActivity(), "IT GONNA BE READ BITCH!!!", Toast.LENGTH_SHORT).show();
