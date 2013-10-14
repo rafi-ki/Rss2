@@ -120,7 +120,7 @@ public class DetailList extends SherlockListFragment
 				}
 				case R.id.detail_lv_item_background:
 					// use background for indicating read state
-					if (cursor.getInt(columnIndex) == 0) // 0 => not read, 1 => read
+					if (cursor.getInt(columnIndex) == 1) // 0 => not read, 1 => read
 						view.setBackgroundResource(R.color.gray);
 					return true;
 				default:
@@ -135,8 +135,6 @@ public class DetailList extends SherlockListFragment
 			@Override
 			public boolean onItemLongClick(AdapterView<?> adapterview, View view,
 					int position, long id) {
-				
-			
 				 if(mActionMode != null){
 					 mActionMode.finish();
 				 }
@@ -214,19 +212,16 @@ public class DetailList extends SherlockListFragment
 				if(checked)
 				{	System.out.println("Position in List selected: "+position);
 					idlist.add(Integer.valueOf(position));
-					
+					View v = getListView().getChildAt(position);
+					v.setBackgroundColor(0xCC99CC00);
 				}
 				else{
 					System.out.println("Position in List deselected: "+position);
 					idlist.remove(Integer.valueOf(position));
-
+					View v = getListView().getChildAt(position);
+					v.setBackgroundColor(0x00000000);
 				}
-				
 			}
-
-			
-
-		    
 		 });
 	}
 
@@ -234,6 +229,9 @@ public class DetailList extends SherlockListFragment
 	public void onResume()
 	{
 		super.onResume();
+		
+		// register content observer
+		getActivity().getContentResolver().registerContentObserver(FeedContentProvider.CONTENT_URI_FEED_ITEM, true, detailListObserver);
 		
 		//define receiver for refreshing feed list
 		IntentFilter filter = new IntentFilter(RssDefines.REFRESH_DETAIL_LIST);
@@ -244,6 +242,7 @@ public class DetailList extends SherlockListFragment
 	{
 		super.onPause();
 		
+		getActivity().getContentResolver().unregisterContentObserver(detailListObserver);
 		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
 	}
 	

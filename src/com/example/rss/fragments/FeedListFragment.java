@@ -225,8 +225,7 @@ public class FeedListFragment extends SherlockListFragment
 		 });
 		
 	}
-
-
+	
 	@Override
 	 public void onResume()
 	 {
@@ -239,7 +238,7 @@ public class FeedListFragment extends SherlockListFragment
 		
 		// register content observer
 		getActivity().getContentResolver().registerContentObserver(FeedContentProvider.CONTENT_URI_RSS, true, feedListObserver);
-		 
+		
 		//define receiver for refreshing feed list
 		IntentFilter filter = new IntentFilter(RssDefines.REFRESH_FEED_LIST);
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
