@@ -1,5 +1,10 @@
 package com.example.rss.fragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +13,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
@@ -16,6 +22,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
@@ -62,7 +69,7 @@ public class FeedListFragment extends SherlockListFragment
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			switch (item.getItemId()) {
+		/*	switch (item.getItemId()) {
             case R.id.action_feed_list_delete:
             	
             	FeedDatabase.deleteRssFeedById(getActivity(), idToDelete);
@@ -71,17 +78,20 @@ public class FeedListFragment extends SherlockListFragment
             	Toast.makeText(getActivity(), "DELETE BITCH!!!", Toast.LENGTH_SHORT).show();
                 mActionMode.finish();
             	return true;
-            default:
+            default:*/
                 return false;
-        }
+       // }
 
 		}
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
+			mActionMode.finish();
 			mActionMode=null;
 			
 		}};
+		
+		
 	
 	
 	@Override
@@ -98,7 +108,8 @@ public class FeedListFragment extends SherlockListFragment
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
 	}
 		
-	 @Override
+
+	@Override
 	 public void onActivityCreated(Bundle savedInstanceState) 
 	 {
 		 super.onActivityCreated(savedInstanceState);
@@ -130,10 +141,82 @@ public class FeedListFragment extends SherlockListFragment
 				}
 		    });
 		 
-		 this.getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		 enableMultiSelect();
+		 
 	 }
 	 
-	 @Override
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void enableMultiSelect() {
+		 final List<Integer> idlist= new ArrayList<Integer>();
+		 ListView listView = getListView();
+		 listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		 listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+
+			@Override
+			public boolean onActionItemClicked(android.view.ActionMode mode,
+					android.view.MenuItem item) {
+				switch (item.getItemId()) {
+	            case R.id.action_feed_list_delete:
+	            	Toast.makeText(getActivity(), "DELETE (multi) BITCH!!!", Toast.LENGTH_SHORT).show();
+	            	for(int postodel: idlist){
+	            		Toast.makeText(getActivity(), "DELETED BITCH "+postodel, Toast.LENGTH_SHORT).show();
+	            		View v = getListView().getChildAt(postodel);
+						v.setBackgroundColor(0x00000000);
+	            	}
+	            	idlist.clear();
+	            	mode.finish();
+	            	return true;
+	            default:
+	            	return false;
+				}
+			}
+
+			@Override
+			public boolean onCreateActionMode(android.view.ActionMode mode,
+					android.view.Menu menu) {
+				android.view.MenuInflater inflater = mode.getMenuInflater();
+		        inflater.inflate(R.menu.feed_list_action_menu, menu);
+		        return true;
+			}
+
+			@Override
+			public void onDestroyActionMode(android.view.ActionMode mode) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public boolean onPrepareActionMode(android.view.ActionMode mode,
+					android.view.Menu menu) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public void onItemCheckedStateChanged(android.view.ActionMode mode,
+					int position, long id, boolean checked) {
+				if(checked)
+				{
+					idlist.add(Integer.valueOf(position));
+					View v = getListView().getChildAt(position);
+					v.setBackgroundColor(0xCC99CC00);
+				}
+				else{
+					idlist.remove(Integer.valueOf(position));
+					View v = getListView().getChildAt(position);
+					v.setBackgroundColor(0x00000000);
+				}
+				
+			}
+
+		    
+		 });
+		
+	}
+
+
+	@Override
 	 public void onResume()
 	 {
 		 super.onResume();
