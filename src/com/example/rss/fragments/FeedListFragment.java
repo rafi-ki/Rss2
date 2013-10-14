@@ -148,7 +148,8 @@ public class FeedListFragment extends SherlockListFragment
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void enableMultiSelect() {
-		 final List<Integer> idlist= new ArrayList<Integer>();
+		 final List<Integer> poslist= new ArrayList<Integer>();
+		 final List<Long> idlist= new ArrayList<Long>();
 		 ListView listView = getListView();
 		 listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		 listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
@@ -159,11 +160,15 @@ public class FeedListFragment extends SherlockListFragment
 				switch (item.getItemId()) {
 	            case R.id.action_feed_list_delete:
 	            	Toast.makeText(getActivity(), "DELETE (multi) BITCH!!!", Toast.LENGTH_SHORT).show();
-	            	for(int postodel: idlist){
+	            	for(long idtodel:idlist){
+	            		FeedDatabase.deleteRssFeedById(getSherlockActivity(), idtodel);
+	            	}
+	            	for(int postodel: poslist){
 	            		Toast.makeText(getActivity(), "DELETED BITCH "+postodel, Toast.LENGTH_SHORT).show();
 	            		View v = getListView().getChildAt(postodel);
 						v.setBackgroundColor(0x00000000);
 	            	}
+	            	poslist.clear();
 	            	idlist.clear();
 	            	mode.finish();
 	            	return true;
@@ -182,10 +187,11 @@ public class FeedListFragment extends SherlockListFragment
 
 			@Override
 			public void onDestroyActionMode(android.view.ActionMode mode) {
-				for(int postodel: idlist){
+				for(int postodel: poslist){
             		View v = getListView().getChildAt(postodel);
 					v.setBackgroundColor(0x00000000);
             	}
+            	poslist.clear();
             	idlist.clear();
 			}
 
@@ -201,12 +207,14 @@ public class FeedListFragment extends SherlockListFragment
 					int position, long id, boolean checked) {
 				if(checked)
 				{
-					idlist.add(Integer.valueOf(position));
+					poslist.add(Integer.valueOf(position));
+					idlist.add(Long.valueOf(id));
 					View v = getListView().getChildAt(position);
 					v.setBackgroundColor(0xCC99CC00);
 				}
 				else{
-					idlist.remove(Integer.valueOf(position));
+					poslist.remove(Integer.valueOf(position));
+					idlist.remove(Long.valueOf(id));
 					View v = getListView().getChildAt(position);
 					v.setBackgroundColor(0x00000000);
 				}
