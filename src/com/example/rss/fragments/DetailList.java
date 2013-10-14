@@ -1,5 +1,9 @@
 package com.example.rss.fragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +11,7 @@ import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
@@ -21,6 +26,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -62,21 +68,8 @@ public class DetailList extends SherlockListFragment
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			switch (item.getItemId()) {
-            	
-            case R.id.action_detail_list_read:
-            	Toast.makeText(getActivity(), "IT GONNA BE READ BITCH!!!", Toast.LENGTH_SHORT).show();
-                mActionMode.finish();
-            	return true;
-            	
-            case R.id.action_detail_list_star:
-            	Toast.makeText(getActivity(), "OH YEAH A STAR BITCH!!!", Toast.LENGTH_SHORT).show();
-                mActionMode.finish();
-            	return true;
-            	
-            default:
+			
                 return false;
-        }
 
 		}
 
@@ -156,7 +149,87 @@ public class DetailList extends SherlockListFragment
 				 return true;
 			}
 	    });
+		
+		enableMultiSelect();
 	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void enableMultiSelect() {
+		 final List<Integer> idlist= new ArrayList<Integer>();
+		 ListView listView = getListView();
+		 listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		 listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+
+			@Override
+			public boolean onActionItemClicked(android.view.ActionMode mode,
+					android.view.MenuItem item) {
+				switch (item.getItemId()) {
+            	
+	            case R.id.action_detail_list_read:
+	            	for(Integer pos : idlist){
+	            		Toast.makeText(getActivity(), "READ BITCH "+ pos, Toast.LENGTH_SHORT).show();
+	            	}
+	            	mode.finish();
+	            	return true;
+	            	
+	            case R.id.action_detail_list_star:
+	            	for(Integer pos : idlist){
+	            		Toast.makeText(getActivity(), "STAR BITCH "+pos, Toast.LENGTH_SHORT).show();
+	            	}
+	            	mode.finish();
+	            	return true;
+	            	
+	            default:
+	            	return false;
+				}
+			}
+
+			@Override
+			public boolean onCreateActionMode(android.view.ActionMode mode,
+					android.view.Menu menu) {
+				android.view.MenuInflater inflater = mode.getMenuInflater();
+		        inflater.inflate(R.menu.detail_list_action_menu, menu);
+		        return true;
+			}
+
+			@Override
+			public void onDestroyActionMode(android.view.ActionMode mode) {
+////				for(int pos: idlist){
+//            		View v = getListView().getChildAt(pos);
+//					v.setBackgroundColor(0x00000000);
+//            	}
+         	idlist.clear();
+			}
+
+			@Override
+			public boolean onPrepareActionMode(android.view.ActionMode mode,
+					android.view.Menu menu) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public void onItemCheckedStateChanged(android.view.ActionMode mode,
+					int position, long id, boolean checked) {
+				if(checked)
+				{	System.out.println("Position in List selected: "+position);
+					idlist.add(Integer.valueOf(position));
+					
+				}
+				else{
+					System.out.println("Position in List deselected: "+position);
+					idlist.remove(Integer.valueOf(position));
+
+				}
+				
+			}
+
+			
+
+		    
+		 });
+	}
+
 	
 	public void onResume()
 	{

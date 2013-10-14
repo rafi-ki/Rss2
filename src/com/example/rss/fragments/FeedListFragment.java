@@ -182,8 +182,11 @@ public class FeedListFragment extends SherlockListFragment
 
 			@Override
 			public void onDestroyActionMode(android.view.ActionMode mode) {
-				// TODO Auto-generated method stub
-				
+				for(int postodel: idlist){
+            		View v = getListView().getChildAt(postodel);
+					v.setBackgroundColor(0x00000000);
+            	}
+            	idlist.clear();
 			}
 
 			@Override
