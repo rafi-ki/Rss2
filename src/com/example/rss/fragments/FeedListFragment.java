@@ -201,6 +201,10 @@ public class FeedListFragment extends SherlockListFragment
 			@Override
 			public void onItemCheckedStateChanged(android.view.ActionMode mode,
 					int position, long id, boolean checked) {
+				int checkedCount = getListView().getCheckedItemCount();
+				if (checkedCount != 0)
+					mode.setTitle(checkedCount + "");
+				
 				if(checked)
 				{
 					poslist.add(Integer.valueOf(position));
