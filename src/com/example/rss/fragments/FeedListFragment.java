@@ -87,7 +87,6 @@ public class FeedListFragment extends SherlockListFragment
 		public void onDestroyActionMode(ActionMode mode) {
 			mActionMode.finish();
 			mActionMode=null;
-			
 		}};
 		
 		
@@ -217,8 +216,6 @@ public class FeedListFragment extends SherlockListFragment
 				}
 				
 			}
-
-		    
 		 });
 	}
 	
@@ -248,6 +245,7 @@ public class FeedListFragment extends SherlockListFragment
 		 
 		 // unregister content observer
 		 getActivity().getContentResolver().unregisterContentObserver(feedListObserver);
+		 
 	 }
 	 
 	 @Override

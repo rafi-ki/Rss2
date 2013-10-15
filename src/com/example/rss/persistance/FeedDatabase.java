@@ -102,6 +102,15 @@ public class FeedDatabase {
 		return cursorToRssFeed(cursor);
 	}
 	
+	public static FeedItem getFeedItemById(Context c, long id)
+	{
+		ContentResolver cr = c.getContentResolver();
+		String[] projection = FeedItemTable.ALL_COLUMNS;
+		Cursor cursor = cr.query(FeedContentProvider.CONTENT_URI_FEED_ITEM, projection, FeedItemTable.COLUMN_ID + "=" + id, null, null);
+		cursor.moveToFirst();
+		return cursorToFeedItem(cursor);
+	}
+	
 	public static List<RssFeed> getRssFeeds(Context c)
 	{
 		ContentResolver cr = c.getContentResolver();
@@ -118,6 +127,57 @@ public class FeedDatabase {
 		return feedList;
 	}
 	
+	public static void markFeedItemAsRead(Context c, long id)
+	{
+		ContentResolver cr = c.getContentResolver();
+		FeedItem item = getFeedItemById(c, id);
+		
+		ContentValues values = new ContentValues();
+		values.put(FeedItemTable.COLUMN_RSSFEED_ID, item.getRssFeedId());
+		values.put(FeedItemTable.COLUMN_TITLE, item.getTitle());
+		values.put(FeedItemTable.COLUMN_AUTHOR, item.getAuthor());
+		values.put(FeedItemTable.COLUMN_DESCRIPTION, item.getDescription());
+		values.put(FeedItemTable.COLUMN_LINK, item.getLink());
+		values.put(FeedItemTable.COLUMN_READ_STATE, 1);
+		values.put(FeedItemTable.COLUMN_STARRED_STATE, toInteger(item.isStarred()));
+		
+		cr.update(FeedContentProvider.CONTENT_URI_FEED_ITEM, values, FeedItemTable.COLUMN_ID + "=" + id, null);
+	}
+	
+	public static void markFeedItemAsUnread(Context c, long id)
+	{
+		ContentResolver cr = c.getContentResolver();
+		FeedItem item = getFeedItemById(c, id);
+		
+		ContentValues values = new ContentValues();
+		values.put(FeedItemTable.COLUMN_RSSFEED_ID, item.getRssFeedId());
+		values.put(FeedItemTable.COLUMN_TITLE, item.getTitle());
+		values.put(FeedItemTable.COLUMN_AUTHOR, item.getAuthor());
+		values.put(FeedItemTable.COLUMN_DESCRIPTION, item.getDescription());
+		values.put(FeedItemTable.COLUMN_LINK, item.getLink());
+		values.put(FeedItemTable.COLUMN_READ_STATE, 0);
+		values.put(FeedItemTable.COLUMN_STARRED_STATE, toInteger(item.isStarred()));
+		
+		cr.update(FeedContentProvider.CONTENT_URI_FEED_ITEM, values, FeedItemTable.COLUMN_ID + "=" + id, null);
+	}
+	
+	public static void markFeedItemAsStarred(Context c, long id)
+	{
+		ContentResolver cr = c.getContentResolver();
+		FeedItem item = getFeedItemById(c, id);
+		
+		ContentValues values = new ContentValues();
+		values.put(FeedItemTable.COLUMN_RSSFEED_ID, item.getRssFeedId());
+		values.put(FeedItemTable.COLUMN_TITLE, item.getTitle());
+		values.put(FeedItemTable.COLUMN_AUTHOR, item.getAuthor());
+		values.put(FeedItemTable.COLUMN_DESCRIPTION, item.getDescription());
+		values.put(FeedItemTable.COLUMN_LINK, item.getLink());
+		values.put(FeedItemTable.COLUMN_READ_STATE, toInteger(item.isRead()));
+		values.put(FeedItemTable.COLUMN_STARRED_STATE, 1);
+		
+		cr.update(FeedContentProvider.CONTENT_URI_FEED_ITEM, values, FeedItemTable.COLUMN_ID + "=" + id, null);
+	}
+	
 	private static RssFeed cursorToRssFeed(Cursor cursor)
 	{
 		RssFeed feed = new RssFeed();
@@ -131,8 +191,28 @@ public class FeedDatabase {
 		return feed;
 	}
 	
+	private static FeedItem cursorToFeedItem(Cursor cursor)
+	{
+		FeedItem item = new FeedItem();
+		item.setId(cursor.getLong(cursor.getColumnIndex(FeedItemTable.COLUMN_ID)));
+		item.setTitle(cursor.getString(cursor.getColumnIndex(FeedItemTable.COLUMN_TITLE)));
+		item.setRssFeedId(cursor.getLong(cursor.getColumnIndex(FeedItemTable.COLUMN_RSSFEED_ID)));
+		item.setDescription(cursor.getString(cursor.getColumnIndex(FeedItemTable.COLUMN_DESCRIPTION)));
+		item.setAuthor(cursor.getString(cursor.getColumnIndex(FeedItemTable.COLUMN_AUTHOR)));
+		item.setLink(cursor.getString(cursor.getColumnIndex(FeedItemTable.COLUMN_LINK)));
+		item.setRead(toBoolean(cursor.getInt(cursor.getColumnIndex(FeedItemTable.COLUMN_READ_STATE))));
+		item.setStarred(toBoolean(cursor.getInt(cursor.getColumnIndex(FeedItemTable.COLUMN_STARRED_STATE))));
+
+		return item;
+	}
+	
 	private static int toInteger(boolean value)
 	{
 		return value ? 1 : 0;
+	}
+	
+	private static boolean toBoolean(int value)
+	{
+		return value==1;
 	}
 }

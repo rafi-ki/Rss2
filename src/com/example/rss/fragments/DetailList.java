@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.example.rss.R;
 import com.example.rss.observer.FeedItemObserver;
 import com.example.rss.persistance.FeedContentProvider;
+import com.example.rss.persistance.FeedDatabase;
 import com.example.rss.persistance.FeedItemTable;
 import com.example.rss.persistance.RssDefines;
 
@@ -47,6 +49,8 @@ public class DetailList extends SherlockListFragment
 	private long rssFeedId;
 	private ContentObserver detailListObserver;
 	private RefreshDetailListReceiver receiver;
+	
+	private ListView listView;
 	
 	private ActionMode mActionMode;
 	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback(){
@@ -68,15 +72,13 @@ public class DetailList extends SherlockListFragment
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			
-                return false;
-
+               return false;
 		}
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
+			mActionMode.finish();
 			mActionMode=null;
-			
 		}};
 	
 	@Override
@@ -98,10 +100,13 @@ public class DetailList extends SherlockListFragment
 		Bundle b = getArguments();
 		rssFeedId = b.getLong(RssDefines.EXTRA_DATA_DETAILS_ID);
 		
+		listView = this.getListView();
+		
 		String[] from = {FeedItemTable.COLUMN_TITLE, FeedItemTable.COLUMN_LINK, FeedItemTable.COLUMN_DESCRIPTION, FeedItemTable.COLUMN_STARRED_STATE, FeedItemTable.COLUMN_READ_STATE};
-		int [] to = {R.id.detail_lv_item_title, R.id.detail_lv_item_link, R.id.detail_lv_item_description, R.id.detail_lv_item_starred, R.id.detail_lv_item_background};
+		int [] to = {R.id.detail_lv_item_title, R.id.detail_lv_item_link, R.id.detail_lv_item_description, R.id.detail_lv_item_starred, R.id.detail_lv_item_read};
 		adapter = new SimpleCursorAdapter(getActivity(), R.layout.detail_lv_item, null, from, to, 0);
 		setListAdapter(adapter);
+		listView.setAdapter(adapter);
 		
 		adapter.setViewBinder(new ViewBinder(){
 			@Override
@@ -118,10 +123,14 @@ public class DetailList extends SherlockListFragment
 						tv.setText("starred");
 					return true;
 				}
-				case R.id.detail_lv_item_background:
+				case R.id.detail_lv_item_read:
 					// use background for indicating read state
 					if (cursor.getInt(columnIndex) == 1) // 0 => not read, 1 => read
-						view.setBackgroundResource(R.color.gray);
+					{
+						RelativeLayout layout = (RelativeLayout) view.getParent();
+						layout.setBackgroundColor(Color.GRAY);
+//						layout.setBackgroundResource(R.color.gray);
+					}
 					return true;
 				default:
 					return false; // not handled within this method
@@ -154,29 +163,36 @@ public class DetailList extends SherlockListFragment
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void enableMultiSelect() {
 		 final List<Integer> idlist= new ArrayList<Integer>();
-		 ListView listView = getListView();
 		 listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		 listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 
 			@Override
 			public boolean onActionItemClicked(android.view.ActionMode mode,
 					android.view.MenuItem item) {
+				long ids[];
 				switch (item.getItemId()) {
             	
 	            case R.id.action_detail_list_read:
-	            	for(Integer pos : idlist){
-	            		Toast.makeText(getActivity(), "READ BITCH "+ pos, Toast.LENGTH_SHORT).show();
-	            	}
+	            	ids = listView.getCheckedItemIds();
+	            	for (int i=0; i<ids.length; i++)
+	            		FeedDatabase.markFeedItemAsRead(getActivity(), ids[i]);
+	            	Toast.makeText(getActivity(), "READ BITCH: "+ listView.getCheckedItemCount(), Toast.LENGTH_SHORT).show();
 	            	mode.finish();
 	            	return true;
 	            	
 	            case R.id.action_detail_list_star:
-	            	for(Integer pos : idlist){
-	            		Toast.makeText(getActivity(), "STAR BITCH "+pos, Toast.LENGTH_SHORT).show();
-	            	}
+	            	ids = listView.getCheckedItemIds();
+	            	for (int i=0; i<ids.length; i++)
+	            		FeedDatabase.markFeedItemAsStarred(getActivity(), ids[i]);
+	            	Toast.makeText(getActivity(), "STAR BITCH "+ listView.getCheckedItemCount(), Toast.LENGTH_SHORT).show();
 	            	mode.finish();
 	            	return true;
-	            	
+//	            case R.id.action_detail_list_unread:
+//	            	ids = listView.getCheckedItemIds();
+//	            	for (int i=0; i<ids.length; i++)
+//	            		FeedDatabase.markFeedItemAsUnread(getActivity(), ids[i]);
+//	            	mode.finish();
+//	            	return true;
 	            default:
 	            	return false;
 				}
@@ -209,17 +225,19 @@ public class DetailList extends SherlockListFragment
 			@Override
 			public void onItemCheckedStateChanged(android.view.ActionMode mode,
 					int position, long id, boolean checked) {
+				int checkedCount = getListView().getCheckedItemCount();
+				if (checkedCount != 0)
+					mode.setTitle(checkedCount + "");
+				
 				if(checked)
-				{	System.out.println("Position in List selected: "+position);
+				{	
+					System.out.println("Position in List selected: "+position);
+					System.out.println("Id in List selected: " + id);
 					idlist.add(Integer.valueOf(position));
-//					View v = getListView().getChildAt(position);
-//					v.setBackgroundColor(0xCC99CC00);
 				}
 				else{
 					System.out.println("Position in List deselected: "+position);
 					idlist.remove(Integer.valueOf(position));
-//					View v = getListView().getChildAt(position);
-//					v.setBackgroundColor(0x00000000);
 				}
 			}
 		 });
