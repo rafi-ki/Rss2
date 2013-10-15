@@ -48,7 +48,6 @@ public class FeedListFragment extends SherlockListFragment
 	
 	private SimpleCursorAdapter adapter;
 	
-	private long idToDelete;
 	private ActionMode mActionMode;
 	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback(){
 
@@ -126,8 +125,6 @@ public class FeedListFragment extends SherlockListFragment
 				public boolean onItemLongClick(AdapterView<?> adapterview, View view,
 						int position, long id) {
 					
-					 idToDelete = id;
-				
 					 if(mActionMode != null){
 						 mActionMode.finish();
 					 }
@@ -223,7 +220,6 @@ public class FeedListFragment extends SherlockListFragment
 
 		    
 		 });
-		
 	}
 	
 	@Override

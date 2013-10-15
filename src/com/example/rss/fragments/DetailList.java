@@ -212,14 +212,14 @@ public class DetailList extends SherlockListFragment
 				if(checked)
 				{	System.out.println("Position in List selected: "+position);
 					idlist.add(Integer.valueOf(position));
-					View v = getListView().getChildAt(position);
-					v.setBackgroundColor(0xCC99CC00);
+//					View v = getListView().getChildAt(position);
+//					v.setBackgroundColor(0xCC99CC00);
 				}
 				else{
 					System.out.println("Position in List deselected: "+position);
 					idlist.remove(Integer.valueOf(position));
-					View v = getListView().getChildAt(position);
-					v.setBackgroundColor(0x00000000);
+//					View v = getListView().getChildAt(position);
+//					v.setBackgroundColor(0x00000000);
 				}
 			}
 		 });
