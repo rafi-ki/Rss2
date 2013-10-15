@@ -115,22 +115,17 @@ public class DetailList extends SherlockListFragment
 				{
 				case R.id.detail_lv_item_starred:
 				{
-					// use starred textview for indicating starred state
-					TextView tv = (TextView) view;
 					if (cursor.getInt(columnIndex) == 0) // 0 => not starred, 1 => starred
-						tv.setText("not starred");
+						view.setVisibility(View.INVISIBLE);
 					else
-						tv.setText("starred");
+						view.setVisibility(View.VISIBLE);
 					return true;
 				}
 				case R.id.detail_lv_item_read:
-					// use background for indicating read state
 					if (cursor.getInt(columnIndex) == 1) // 0 => not read, 1 => read
-					{
-						RelativeLayout layout = (RelativeLayout) view.getParent();
-						layout.setBackgroundColor(Color.GRAY);
-//						layout.setBackgroundResource(R.color.gray);
-					}
+						view.setVisibility(View.VISIBLE);
+					else
+						view.setVisibility(View.INVISIBLE);
 					return true;
 				default:
 					return false; // not handled within this method
@@ -187,12 +182,12 @@ public class DetailList extends SherlockListFragment
 	            	Toast.makeText(getActivity(), "STAR BITCH "+ listView.getCheckedItemCount(), Toast.LENGTH_SHORT).show();
 	            	mode.finish();
 	            	return true;
-//	            case R.id.action_detail_list_unread:
-//	            	ids = listView.getCheckedItemIds();
-//	            	for (int i=0; i<ids.length; i++)
-//	            		FeedDatabase.markFeedItemAsUnread(getActivity(), ids[i]);
-//	            	mode.finish();
-//	            	return true;
+	            case R.id.action_detail_list_unread:
+	            	ids = listView.getCheckedItemIds();
+	            	for (int i=0; i<ids.length; i++)
+	            		FeedDatabase.markFeedItemAsUnread(getActivity(), ids[i]);
+	            	mode.finish();
+	            	return true;
 	            default:
 	            	return false;
 				}

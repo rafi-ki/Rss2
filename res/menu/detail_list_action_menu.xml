@@ -13,4 +13,11 @@
         android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_read"
         />
+    
+   <item 
+        android:id="@+id/action_detail_list_unread"
+        android:title="@string/action_unread"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_discard"
+        />
 </menu>

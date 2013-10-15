@@ -5,26 +5,16 @@
     >
 
     <TextView
-        android:id="@+id/detail_lv_item_read"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="0sp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text="hubaaaaaa"
-         />
-    
-    <TextView
         android:id="@+id/detail_lv_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/detail_lv_item_starred"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
         android:text="title"
-         />
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/detail_lv_item_link"
@@ -33,6 +23,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@id/detail_lv_item_title"
+        android:paddingLeft="2dp"
         android:text="link"
          />
 
@@ -43,16 +34,26 @@
         android:textSize="20sp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:paddingLeft="2dp"
         android:layout_below="@id/detail_lv_item_link"
         android:text="description"
          />
 
-    <TextView
-        android:id="@+id/detail_lv_item_starred"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text="starred" />
+     <ImageView
+         android:id="@+id/detail_lv_item_starred"
+         android:layout_width="20dp"
+         android:layout_height="20dp"
+         android:layout_alignParentRight="true"
+         android:layout_alignParentTop="true"
+         android:src="@drawable/ic_action_important" />
+
+     <ImageView
+         android:id="@+id/detail_lv_item_read"
+         android:layout_width="20dp"
+         android:layout_height="20dp"
+         android:layout_alignParentRight="true"
+         android:layout_below="@+id/detail_lv_item_starred"
+         android:src="@drawable/ic_action_read"
+         android:text="read" />
 
 </RelativeLayout>
