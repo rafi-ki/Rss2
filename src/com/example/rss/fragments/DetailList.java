@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,13 +21,12 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.view.View;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AbsListView.MultiChoiceModeListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.ActionMode;
@@ -171,7 +169,7 @@ public class DetailList extends SherlockListFragment
 	            	ids = listView.getCheckedItemIds();
 	            	for (int i=0; i<ids.length; i++)
 	            		FeedDatabase.markFeedItemAsRead(getActivity(), ids[i]);
-	            	Toast.makeText(getActivity(), "READ BITCH: "+ listView.getCheckedItemCount(), Toast.LENGTH_SHORT).show();
+//	            	Toast.makeText(getActivity(), "READ BITCH: "+ listView.getCheckedItemCount(), Toast.LENGTH_SHORT).show();
 	            	mode.finish();
 	            	return true;
 	            	
@@ -179,7 +177,7 @@ public class DetailList extends SherlockListFragment
 	            	ids = listView.getCheckedItemIds();
 	            	for (int i=0; i<ids.length; i++)
 	            		FeedDatabase.markFeedItemAsStarred(getActivity(), ids[i]);
-	            	Toast.makeText(getActivity(), "STAR BITCH "+ listView.getCheckedItemCount(), Toast.LENGTH_SHORT).show();
+//	            	Toast.makeText(getActivity(), "STAR BITCH "+ listView.getCheckedItemCount(), Toast.LENGTH_SHORT).show();
 	            	mode.finish();
 	            	return true;
 	            case R.id.action_detail_list_unread:

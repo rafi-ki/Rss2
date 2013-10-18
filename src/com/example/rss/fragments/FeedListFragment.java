@@ -3,7 +3,6 @@ package com.example.rss.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,7 +24,6 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.ActionMode;
@@ -155,12 +152,12 @@ public class FeedListFragment extends SherlockListFragment
 					android.view.MenuItem item) {
 				switch (item.getItemId()) {
 	            case R.id.action_feed_list_delete:
-	            	Toast.makeText(getActivity(), "DELETE (multi) BITCH!!!", Toast.LENGTH_SHORT).show();
+//	            	Toast.makeText(getActivity(), "DELETE (multi) BITCH!!!", Toast.LENGTH_SHORT).show();
 	            	for(long idtodel:idlist){
 	            		FeedDatabase.deleteRssFeedById(getSherlockActivity(), idtodel);
 	            	}
 	            	for(int postodel: poslist){
-	            		Toast.makeText(getActivity(), "DELETED BITCH "+postodel, Toast.LENGTH_SHORT).show();
+//	            		Toast.makeText(getActivity(), "DELETED BITCH "+postodel, Toast.LENGTH_SHORT).show();
 	            		View v = getListView().getChildAt(postodel);
 						v.setBackgroundColor(0x00000000);
 	            	}
